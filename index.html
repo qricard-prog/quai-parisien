@@ -8,490 +8,447 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#1a1a2e; font-family:'Courier New',monospace; overflow:hidden; user-select:none; }
 canvas { display:block; }
-
 #ui {
-  position:absolute; top:10px; left:10px;
-  color:#e0e0e0; font-size:12px;
-  background:rgba(0,0,0,0.65); padding:10px 14px;
-  border-radius:8px; line-height:1.9; pointer-events:none;
+  position:absolute; top:10px; left:10px; color:#e0e0e0; font-size:12px;
+  background:rgba(0,0,0,0.65); padding:10px 14px; border-radius:8px; line-height:1.9; pointer-events:none;
 }
 #status {
   position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
-  color:#fff; font-size:15px; font-weight:bold;
-  background:rgba(0,0,0,0.78); padding:10px 22px;
-  border-radius:10px; text-align:center; pointer-events:none;
+  color:#fff; font-size:15px; font-weight:bold; background:rgba(0,0,0,0.78);
+  padding:10px 22px; border-radius:10px; text-align:center; pointer-events:none;
   letter-spacing:0.4px; white-space:nowrap; max-width:90vw;
 }
-
-/* Phone vibration widget */
-#vibration {
-  position:absolute; top:10px; right:10px;
-  display:none; flex-direction:column; align-items:center; gap:6px;
-}
-#phone {
-  width:44px; height:76px; background:#1a1a1a;
-  border:2px solid #444; border-radius:10px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:22px; position:relative;
-}
+#vibration { position:absolute; top:10px; right:10px; display:none; flex-direction:column; align-items:center; gap:6px; }
+#phone { width:44px; height:76px; background:#1a1a1a; border:2px solid #444; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; position:relative; }
 #phone::before { content:''; position:absolute; top:6px; width:14px; height:4px; background:#333; border-radius:2px; }
 #phone::after  { content:''; position:absolute; bottom:8px; width:22px; height:4px; background:#333; border-radius:2px; }
-#vib-rings { display:flex; gap:3px; align-items:center; }
+#vib-rings { display:flex; gap:3px; }
 .vring { width:6px; height:6px; border-radius:50%; background:#FF6B35; opacity:0; }
 #vib-label { color:#FF6B35; font-size:10px; font-weight:bold; letter-spacing:1px; }
-
-@keyframes vibrate-weak  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
-@keyframes vibrate-med   { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px) rotate(-2deg)} 75%{transform:translateX(5px) rotate(2deg)} }
-@keyframes vibrate-strong{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px) rotate(-3deg)} 50%{transform:translateX(7px) rotate(3deg)} 80%{transform:translateX(-5px) rotate(-2deg)} }
-@keyframes ring-pulse { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:1;transform:scale(1)} }
-
-.vib-1 #phone { animation:vibrate-weak   0.22s infinite; }
-.vib-2 #phone { animation:vibrate-med    0.16s infinite; }
-.vib-3 #phone { animation:vibrate-strong 0.10s infinite; }
-.vib-1 .vring:nth-child(1) { animation:ring-pulse 0.6s infinite; }
-.vib-2 .vring:nth-child(1),.vib-2 .vring:nth-child(2) { animation:ring-pulse 0.4s infinite; }
-.vib-2 .vring:nth-child(2) { animation-delay:0.15s; }
-.vib-3 .vring { animation:ring-pulse 0.3s infinite; }
-.vib-3 .vring:nth-child(2) { animation-delay:0.1s; }
-.vib-3 .vring:nth-child(3) { animation-delay:0.2s; }
-
-/* Supabase status dot */
-#sync-dot {
-  position:absolute; bottom:60px; right:18px;
-  display:flex; align-items:center; gap:6px;
-  font-size:11px; color:#888; pointer-events:none;
-}
-#sync-dot span { width:8px; height:8px; border-radius:50%; background:#555; display:inline-block; }
+@keyframes vib-w { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
+@keyframes vib-m { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px) rotate(-2deg)} 75%{transform:translateX(5px) rotate(2deg)} }
+@keyframes vib-s { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px) rotate(-3deg)} 50%{transform:translateX(7px) rotate(3deg)} 80%{transform:translateX(-5px) rotate(-2deg)} }
+@keyframes rp { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:1;transform:scale(1)} }
+.vib-1 #phone { animation:vib-w 0.22s infinite; }
+.vib-2 #phone { animation:vib-m 0.16s infinite; }
+.vib-3 #phone { animation:vib-s 0.10s infinite; }
+.vib-1 .vring:nth-child(1) { animation:rp 0.6s infinite; }
+.vib-2 .vring:nth-child(1),.vib-2 .vring:nth-child(2) { animation:rp 0.4s infinite; }
+.vib-2 .vring:nth-child(2) { animation-delay:.15s; }
+.vib-3 .vring { animation:rp 0.3s infinite; }
+.vib-3 .vring:nth-child(2) { animation-delay:.1s; }
+.vib-3 .vring:nth-child(3) { animation-delay:.2s; }
+#sync-dot { position:absolute; bottom:60px; right:18px; display:flex; align-items:center; gap:6px; font-size:11px; color:#888; pointer-events:none; }
+#sync-dot span { width:8px; height:8px; border-radius:50%; background:#555; }
 #sync-dot.connected span { background:#4aff88; box-shadow:0 0 6px #4aff88; }
 #sync-dot.connected { color:#4aff88; }
-
-/* Announcement */
-#announcement {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  background:rgba(0,50,110,0.97);
-  border:2px solid #4a9eff; border-radius:14px;
-  padding:24px 34px; color:#fff; font-size:17px;
-  text-align:center; display:none; z-index:100;
-  max-width:360px; line-height:1.7;
-  box-shadow:0 0 40px rgba(74,158,255,0.35);
-}
-#announcement .ann-icon { font-size:38px; margin-bottom:8px; }
-#announcement .ann-line { font-size:24px; font-weight:bold; color:#4a9eff; }
-#announcement .ann-dest { font-size:14px; color:#99ccff; margin-top:4px; }
-#announcement .ann-msg  { margin-top:12px; font-size:13px; color:#cce0ff; }
-
-/* QR Panel */
-#qr-panel {
-  position:absolute; bottom:70px; right:14px;
-  background:rgba(0,0,0,0.82); border:1px solid #334;
-  border-radius:12px; padding:14px; text-align:center;
-  color:#aaa; font-size:11px; line-height:1.7; width:150px;
-}
+#announcement { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,50,110,0.97); border:2px solid #4a9eff; border-radius:14px; padding:24px 34px; color:#fff; font-size:17px; text-align:center; display:none; z-index:100; max-width:360px; line-height:1.7; }
+#announcement .ai { font-size:38px; margin-bottom:8px; }
+#announcement .al { font-size:24px; font-weight:bold; color:#4a9eff; }
+#announcement .ad { font-size:14px; color:#99ccff; margin-top:4px; }
+#announcement .am { margin-top:12px; font-size:13px; color:#cce0ff; }
+#qr-panel { position:absolute; bottom:70px; right:14px; background:rgba(0,0,0,0.82); border:1px solid #334; border-radius:12px; padding:14px; text-align:center; color:#aaa; font-size:11px; line-height:1.7; width:150px; }
 #qr-panel canvas { border-radius:6px; display:block; margin:0 auto 8px; }
-#qr-panel .qr-title { color:#4a9eff; font-size:12px; font-weight:bold; margin-bottom:6px; }
-
-/* Intro */
-#intro {
-  position:absolute; inset:0;
-  background:rgba(0,0,0,0.93);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  color:#fff; z-index:200; text-align:center; padding:30px;
-}
+#qr-panel .qt { color:#4a9eff; font-size:12px; font-weight:bold; margin-bottom:6px; }
+#intro { position:absolute; inset:0; background:rgba(0,0,0,0.93); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:200; text-align:center; padding:30px; }
 #intro h1 { font-size:22px; color:#4a9eff; margin-bottom:14px; }
-#intro p  { font-size:13px; color:#ccc; line-height:1.85; max-width:390px; margin-bottom:5px; }
+#intro p { font-size:13px; color:#ccc; line-height:1.85; max-width:390px; margin-bottom:5px; }
 .key { display:inline-block; background:#2a2a3a; border:1px solid #555; padding:2px 8px; border-radius:4px; font-family:monospace; font-size:12px; }
 #startBtn { margin-top:22px; padding:13px 36px; background:#4a9eff; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; font-family:monospace; }
-#startBtn:hover { background:#2a7ee0; }
-
-/* Success */
-#success {
-  position:absolute; inset:0; background:rgba(0,0,0,0.88);
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  color:#fff; z-index:300; text-align:center;
-}
+#success { position:absolute; inset:0; background:rgba(0,0,0,0.88); display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:300; text-align:center; }
 #success h2 { font-size:24px; color:#4aff88; margin-bottom:10px; }
-#success p  { color:#ccc; font-size:14px; margin-bottom:20px; }
+#success p { color:#ccc; font-size:14px; margin-bottom:20px; }
 #restartBtn { padding:11px 30px; background:#4aff88; color:#000; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:bold; }
 </style>
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
-
-<div id="ui">
-  🦯 Simulation — Aveugle sur le quai<br>
-  <span class="key">←</span> <span class="key">→</span> Gauche / Droite<br>
-  <span class="key">↑</span> <span class="key">↓</span> Avant / Arrière
-</div>
-
-<div id="status">Repérez la zone d'attente podotactile...</div>
-
-<div id="vibration">
-  <div id="phone">📱</div>
-  <div id="vib-rings">
-    <div class="vring"></div><div class="vring"></div><div class="vring"></div>
-  </div>
-  <div id="vib-label">VIBRATION</div>
-</div>
-
+<div id="ui">🦯 Simulation — Aveugle sur le quai<br><span class="key">←</span> <span class="key">→</span> Gauche / Droite<br><span class="key">↑</span> <span class="key">↓</span> Avant / Arrière</div>
+<div id="status">Attendez le train sur le quai...</div>
+<div id="vibration"><div id="phone">📱</div><div id="vib-rings"><div class="vring"></div><div class="vring"></div><div class="vring"></div></div><div id="vib-label">VIBRATION</div></div>
 <div id="sync-dot"><span></span> mobile sync</div>
-
-<div id="announcement">
-  <div class="ann-icon">🔊</div>
-  <div class="ann-line">Ligne 13</div>
-  <div class="ann-dest">Direction Saint-Denis Université</div>
-  <div class="ann-msg">Les portes sont ouvertes.<br>Bienvenue à bord.<br>Prochain arrêt : Montparnasse.</div>
-</div>
-
-<div id="qr-panel">
-  <div class="qr-title">📱 Ressentir</div>
-  <canvas id="qrcode" width="122" height="122"></canvas>
-  <div style="color:#888;font-size:10px;">Scannez sur Android<br>pour vibrer en live</div>
-</div>
-
+<div id="announcement"><div class="ai">🔊</div><div class="al">Ligne 8</div><div class="ad">Direction Balard</div><div class="am">Les portes sont ouvertes.<br>Bienvenue à bord.<br>Prochain arrêt : Montparnasse.</div></div>
+<div id="qr-panel"><div class="qt">📱 Ressentir</div><canvas id="qrcode" width="122" height="122"></canvas><div style="color:#888;font-size:10px;">Scannez sur Android<br>pour vibrer en live</div></div>
 <div id="intro">
   <h1>🦯 Le Quai Parisien</h1>
-  <p>Vous simulez l'expérience d'un voyageur non-voyant muni d'une canne blanche.<br>
-  Rejoignez la <strong style="color:#FFD700">zone podotactile</strong>, puis montez dans le train.</p>
-  <p style="margin-top:10px;">
-    <span class="key">←</span> <span class="key">→</span> Se déplacer &nbsp;
-    <span class="key">↑</span> <span class="key">↓</span> Avancer / Reculer
-  </p>
-  <p style="color:#4a9eff;font-size:11px;margin-top:10px;">📱 Scannez le QR code (Android) — votre téléphone vibrera en temps réel.</p>
+  <p>Simulez l'expérience d'un voyageur non-voyant.<br>Le train arrive — rejoignez une <strong style="color:#FFD700">zone podotactile</strong> devant une porte, puis montez.</p>
+  <p style="margin-top:10px;"><span class="key">←</span> <span class="key">→</span> <span class="key">↑</span> <span class="key">↓</span> Se déplacer</p>
+  <p style="color:#4a9eff;font-size:11px;margin-top:10px;">📱 Scannez le QR code (Android) pour vibrer en temps réel.</p>
   <button id="startBtn">Commencer</button>
 </div>
-
-<div id="success">
-  <h2>✅ Vous êtes monté dans le train !</h2>
-  <p>Mission accomplie. Bonne route vers Saint-Denis Université.</p>
-  <button id="restartBtn">Rejouer</button>
-</div>
+<div id="success"><h2>✅ Vous êtes monté dans le train !</h2><p>Mission accomplie. Bonne route vers Balard.</p><button id="restartBtn">Rejouer</button></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ── SUPABASE CONFIG ──────────────────────────────────────────────────────────
-const SUPABASE_URL = 'https://naypxosgtdhqhgatvsaz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_Oe-bv2X-wRCvg_AHWbUqlg_fdBAH5R3';
-const MOBILE_URL   = 'https://qricard-prog.github.io/quai-parisien/mobile.html';
+const SUPABASE_URL='https://naypxosgtdhqhgatvsaz.supabase.co';
+const SUPABASE_KEY='sb_publishable_Oe-bv2X-wRCvg_AHWbUqlg_fdBAH5R3';
+const MOBILE_URL='https://qricard-prog.github.io/quai-parisien/mobile.html';
 
-// ── SUPABASE CLIENT (via CDN REST + Realtime) ────────────────────────────────
-async function supabaseUpdate(level) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ level, updated_at: new Date().toISOString() })
-    });
-  } catch(e) { console.warn('Supabase update failed', e); }
+// ── SPEECH SYNTHESIS ─────────────────────────────────────────────────────────
+const SPEECH_MSG = "Ligne 8, direction Balard. Vous êtes en tête du train.";
+
+let lastSpokenLevel = -1;
+let speechEnabled = false;
+
+function speak(text) {
+  if(!speechEnabled) return;
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.92;
+  utt.pitch = 1.0;
+  utt.volume = 1.0;
+  const voices = window.speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if(frVoice) utt.voice = frVoice;
+  window.speechSynthesis.speak(utt);
 }
 
-// ── CANVAS SETUP ─────────────────────────────────────────────────────────────
-const canvas = document.getElementById('gameCanvas');
-const ctx    = canvas.getContext('2d');
-canvas.width  = window.innerWidth;
-canvas.height = window.innerHeight;
-const W = canvas.width, H = canvas.height;
+function unlockSpeech() {
+  speechEnabled = true;
+  const warm = new SpeechSynthesisUtterance(' ');
+  warm.volume = 0;
+  window.speechSynthesis.speak(warm);
+}
 
-// ── GAME STATE ───────────────────────────────────────────────────────────────
-let state = 'intro';
-let vibLevel = 0;
-let trainArrived = false;
-let trainArrivedTimer = 0;
-let doorsOpen = false;
-let tick = 0;
-let inWaitZoneBefore = false;
-let announceShown = false;
-let lastSentLevel = -1;
+async function sbUpdate(level){
+  try{ await fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({level,updated_at:new Date().toISOString()})}); }catch(e){}
+}
 
-// ── PLAYER ───────────────────────────────────────────────────────────────────
-const player = { x: W * 0.72, y: H * 0.70, speed: 3 };
+const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+const W=canvas.width, H=canvas.height;
 
-// ── PLATFORM GEOMETRY ────────────────────────────────────────────────────────
-const platformTop    = H * 0.34;
-const platformBottom = H * 0.86;
-const platformLeft   = W * 0.04;
-const platformRight  = W * 0.96;
+let state='intro',vibLevel=0,trainArrived=false,trainTimer=0,doorsOpen=false,tick=0,announced=false,lastVib=-1,inZoneBefore=false;
+const player={x:W*0.62,y:H*0.80,spd:3};
 
-// ── WAITING ZONE ─────────────────────────────────────────────────────────────
-const waitZone = { x: W*0.42, y: H*0.56, w: W*0.22, h: H*0.15 };
+// ── GEOMETRY ──────────────────────────────────────────────────────────────────
+// Platform occupies bottom 50% of screen
+const PT=H*0.44;   // platform top Y
+const PB=H*0.96;
+const PL=W*0.01;
+const PR=W*0.99;
 
-// ── TRAIN ────────────────────────────────────────────────────────────────────
-const trainW  = W * 0.58;
-let   trainX  = W + 300;
-const trainTopY = platformTop - 5;
-const trainH    = H * 0.30;
-const doors = [{ rel:0.18, w:58 }, { rel:0.50, w:58 }, { rel:0.78, w:58 }];
+// Train: full platform width, bottom face at PT (sits against platform edge)
+const TH=H*0.36;
+const TW=W*1.00;   // full screen width — train covers entire platform
+const TY=PT-TH;    // train top Y
+let   TX=W+400;    // starts off-screen right
+// Once arrived, train left edge is at x=0
+const TX_FINAL=0;
 
-// ── QR CODE ──────────────────────────────────────────────────────────────────
-function generateQR() {
-  const qc = document.getElementById('qrcode');
-  if(typeof QRCode !== 'undefined') {
-    const tmp = document.createElement('div');
-    new QRCode(tmp, { text:MOBILE_URL, width:112, height:112, colorDark:'#000000', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M });
-    setTimeout(() => {
-      const img = tmp.querySelector('img') || tmp.querySelector('canvas');
-      if(img) { const ctx2=qc.getContext('2d'); ctx2.fillStyle='#fff'; ctx2.fillRect(0,0,122,122); ctx2.drawImage(img,5,5,112,112); }
-    }, 300);
+// RATP Ligne 8 colors
+const C_SILVER='#CDD1D6', C_BLUE='#0055A4', C_WHITE='#FFFFFF', C_DARK='#1C2B3A', C_ROOF='#A8B0B8';
+
+// 3 doors evenly spaced along the full-width train
+const DREL=[0.18,0.50,0.80];
+const DW=Math.max(70,W*0.075);
+const DH=TH*0.48;
+
+function doorCX(i){ return TX+DREL[i]*TW; }
+function doorY(){ return TY+TH*0.48; }
+
+// Wait zones: 1.5–2m from train = ~160px gap below train bottom (PT)
+// Each zone is slightly wider than its door, centered on it
+const ZONE_GAP=H*0.16;  // distance from PT (platform edge) to top of zone
+const ZW_PAD=24;         // extra px each side beyond door width
+const ZH=H*0.10;
+function waitZones(){
+  return DREL.map(r=>({
+    x: TX+r*TW - DW/2 - ZW_PAD,
+    y: PT + ZONE_GAP,
+    w: DW + ZW_PAD*2,
+    h: ZH
+  }));
+}
+
+function inAnyZone(){ return trainArrived && waitZones().some(z=>player.x>z.x&&player.x<z.x+z.w&&player.y>z.y&&player.y<z.y+z.h); }
+function nearDoorDist(){
+  if(!trainArrived||!doorsOpen) return 9999;
+  return Math.min(...DREL.map((_,i)=>Math.hypot(player.x-doorCX(i),player.y-(TY+TH))));
+}
+function insideTrain(){
+  if(!trainArrived||!doorsOpen) return false;
+  // Player must be aligned with a door AND have crossed above PT (into the train)
+  return DREL.some((_,i)=>
+    Math.abs(player.x - doorCX(i)) < DW/2 + 10 &&
+    player.y < PT - 10
+  );
+}
+
+function generateQR(){
+  const qc=document.getElementById('qrcode');
+  if(typeof QRCode!=='undefined'){
+    const t=document.createElement('div');
+    new QRCode(t,{text:MOBILE_URL,width:112,height:112,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
+    setTimeout(()=>{ const i=t.querySelector('img')||t.querySelector('canvas'); if(i){const c=qc.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,122,122);c.drawImage(i,5,5,112,112);} },300);
   }
 }
 
-// ── SYNC STATUS ──────────────────────────────────────────────────────────────
-function setSyncStatus(connected) {
-  document.getElementById('sync-dot').className = connected ? 'connected' : '';
-}
+fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1&select=level`,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}})
+  .then(r=>{document.getElementById('sync-dot').className=r.ok?'connected':'';}).catch(()=>{});
 
-// Check connectivity
-fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1&select=level`, {
-  headers:{ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}` }
-}).then(r => setSyncStatus(r.ok)).catch(() => setSyncStatus(false));
-
-// ── VIBRATION UI ─────────────────────────────────────────────────────────────
-function setVibLevel(level) {
-  if(level === vibLevel) return;
-  vibLevel = level;
-  const vibEl  = document.getElementById('vibration');
-  const phoneEl = document.getElementById('phone');
-  phoneEl.className = '';
-  vibEl.style.display = level > 0 ? 'flex' : 'none';
-  if(level > 0) phoneEl.className = 'vib-' + level;
-
-  // Throttle Supabase writes — only send when level changes
-  if(level !== lastSentLevel) {
-    lastSentLevel = level;
-    supabaseUpdate(level);
+function setVib(lv){
+  if(lv===vibLevel) return; vibLevel=lv;
+  const v=document.getElementById('vibration'),p=document.getElementById('phone');
+  p.className=''; v.style.display=lv>0?'flex':'none';
+  if(lv>0) p.className='vib-'+lv;
+  if(lv!==lastVib){
+    lastVib=lv;
+    sbUpdate(lv);
+    // Speak once when signal is first detected (level 1)
+    if(lv===1 && lastSpokenLevel<=0) {
+      speak(SPEECH_MSG);
+    }
+    lastSpokenLevel = lv;
   }
 }
+function setStatus(m){document.getElementById('status').textContent=m;}
 
-function updateStatus(msg) { document.getElementById('status').textContent = msg; }
-
-// ── DRAWING ──────────────────────────────────────────────────────────────────
-function drawBg() {
-  ctx.fillStyle = '#18182a'; ctx.fillRect(0,0,W,H);
-  const cg = ctx.createLinearGradient(0,0,0,platformTop);
-  cg.addColorStop(0,'#101018'); cg.addColorStop(1,'#323248');
-  ctx.fillStyle=cg; ctx.fillRect(0,0,W,platformTop);
-  ctx.fillStyle='#3a3a52'; ctx.fillRect(0,platformTop-46,W,48);
-  for(let x=platformLeft+20;x<platformRight;x+=90){
-    ctx.fillStyle='rgba(255,250,210,0.07)'; ctx.fillRect(x,platformTop-44,60,5);
-  }
-  [[W*0.14,28],[W*0.55,28]].forEach(([sx,sy])=>{
-    ctx.fillStyle='#0055A4'; ctx.beginPath(); ctx.roundRect(sx,sy,130,34,6); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.font='bold 13px monospace'; ctx.textAlign='center';
-    ctx.fillText('MONTPARNASSE',sx+65,sy+22);
+// ── DRAW BACKGROUND ───────────────────────────────────────────────────────────
+function drawBg(){
+  // Tunnel ceiling
+  ctx.fillStyle='#111120'; ctx.fillRect(0,0,W,PT);
+  ctx.fillStyle='#252538'; ctx.fillRect(0,PT-56,W,58);
+  // Ceiling lights
+  for(let x=60;x<W;x+=100){ ctx.fillStyle='rgba(255,245,200,0.055)'; ctx.fillRect(x,PT-52,65,4); }
+  // Station signs
+  [[W*0.20,16],[W*0.58,16]].forEach(([sx,sy])=>{
+    ctx.fillStyle=C_BLUE; ctx.beginPath(); ctx.roundRect(sx,sy,148,30,5); ctx.fill();
+    ctx.fillStyle=C_WHITE; ctx.font='bold 12px monospace'; ctx.textAlign='center';
+    ctx.fillText('MONTPARNASSE',sx+74,sy+20);
   });
-  ctx.fillStyle='#0055A4'; ctx.beginPath(); ctx.roundRect(W*0.75,28,90,34,6); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font='bold 13px monospace'; ctx.textAlign='center';
-  ctx.fillText('LIGNE 13',W*0.75+45,50);
-  ctx.strokeStyle='#404058'; ctx.lineWidth=4;
-  ctx.beginPath(); ctx.moveTo(0,platformTop-10); ctx.lineTo(trainX-10,platformTop-10); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(0,platformTop-24); ctx.lineTo(trainX-10,platformTop-24); ctx.stroke();
-  ctx.fillStyle='#303045';
-  [W*0.12,W*0.30,W*0.58,W*0.76,W*0.90].forEach(px=>{
-    ctx.fillRect(px-9,platformTop,18,platformBottom-platformTop);
-    ctx.fillStyle='#404058'; ctx.fillRect(px-11,platformTop,22,14); ctx.fillStyle='#303045';
+  ctx.fillStyle=C_BLUE; ctx.beginPath(); ctx.roundRect(W*0.82,16,100,30,5); ctx.fill();
+  ctx.fillStyle=C_WHITE; ctx.font='bold 12px monospace'; ctx.textAlign='center'; ctx.fillText('LIGNE 8',W*0.82+50,36);
+  // Rails only visible before train arrives
+  if(TX>W*0.1){
+    ctx.strokeStyle='#484858'; ctx.lineWidth=4;
+    [PT-14,PT-28].forEach(ry=>{ctx.beginPath();ctx.moveTo(0,ry);ctx.lineTo(Math.max(0,TX-2),ry);ctx.stroke();});
+  }
+  // Platform pillars
+  [W*0.08,W*0.25,W*0.70,W*0.88].forEach(px=>{
+    ctx.fillStyle='#22223a'; ctx.fillRect(px-8,PT,16,PB-PT);
+    ctx.fillStyle='#30304a'; ctx.fillRect(px-10,PT,20,11); 
   });
 }
 
-function drawPlatform() {
-  ctx.fillStyle='#7e7e8e'; ctx.fillRect(platformLeft,platformTop,platformRight-platformLeft,platformBottom-platformTop);
-  ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=0.5;
-  for(let x=platformLeft;x<platformRight;x+=38){ ctx.beginPath(); ctx.moveTo(x,platformTop); ctx.lineTo(x,platformBottom); ctx.stroke(); }
-  for(let y=platformTop;y<platformBottom;y+=38){ ctx.beginPath(); ctx.moveTo(platformLeft,y); ctx.lineTo(platformRight,y); ctx.stroke(); }
-  ctx.fillStyle='#F5C800'; ctx.fillRect(platformLeft,platformTop,platformRight-platformLeft,24);
+// ── DRAW PLATFORM ─────────────────────────────────────────────────────────────
+function drawPlatform(){
+  ctx.fillStyle='#7c7c8c'; ctx.fillRect(PL,PT,PR-PL,PB-PT);
+  ctx.strokeStyle='rgba(0,0,0,0.09)'; ctx.lineWidth=0.5;
+  for(let x=PL;x<PR;x+=38){ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PB);ctx.stroke();}
+  for(let y=PT;y<PB;y+=38){ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PR,y);ctx.stroke();}
+  // Yellow safety strip
+  ctx.fillStyle='#F5C800'; ctx.fillRect(PL,PT,PR-PL,16);
   ctx.fillStyle='#D4A800';
-  for(let x=platformLeft+9;x<platformRight;x+=16){ ctx.beginPath(); ctx.arc(x,platformTop+12,5.5,0,Math.PI*2); ctx.fill(); }
-  const stX=waitZone.x+waitZone.w/2-14;
-  ctx.fillStyle='#c8b464'; ctx.fillRect(stX,platformTop+24,28,waitZone.y-platformTop-24);
-  ctx.fillStyle='#a89448';
-  for(let y=platformTop+28;y<waitZone.y-2;y+=13){ ctx.fillRect(stX+4,y,20,7); }
-  ctx.fillStyle='#c4b05a'; ctx.fillRect(waitZone.x,waitZone.y,waitZone.w,waitZone.h);
-  ctx.fillStyle='#a09040';
-  for(let x=waitZone.x+8;x<waitZone.x+waitZone.w-4;x+=13){
-    for(let y=waitZone.y+8;y<waitZone.y+waitZone.h-4;y+=13){ ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); }
-  }
-  ctx.fillStyle='rgba(0,0,0,0.28)'; ctx.font='9px monospace'; ctx.textAlign='center';
-  ctx.fillText("ZONE D'ATTENTE PODOTACTILE",waitZone.x+waitZone.w/2,waitZone.y+waitZone.h+13);
-  ctx.fillStyle='#4e4e62'; ctx.fillRect(platformLeft,platformTop-12,platformRight-platformLeft,12);
-  ctx.fillStyle='#3a3a50'; ctx.fillRect(platformLeft,platformTop-18,platformRight-platformLeft,6);
+  for(let x=PL+8;x<PR;x+=13){ctx.beginPath();ctx.arc(x,PT+8,4,0,Math.PI*2);ctx.fill();}
+  // Edge lip
+  ctx.fillStyle='#52526a'; ctx.fillRect(PL,PT-10,PR-PL,10);
+  ctx.fillStyle='#3a3a52'; ctx.fillRect(PL,PT-16,PR-PL,6);
 }
 
-function drawTrain() {
-  if(trainX>W+150) return;
-  const tx=trainX, ty=trainTopY;
-  ctx.fillStyle='#ccd4dc'; ctx.fillRect(tx,ty,trainW,trainH);
-  ctx.fillStyle='#0055A4'; ctx.fillRect(tx,ty+trainH*0.2,trainW,20);
-  ctx.fillStyle='#EF4135'; ctx.fillRect(tx,ty+trainH*0.2+20,trainW,9);
-  ctx.fillStyle='#b0bcc8';
-  ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx-22,ty+trainH*0.5); ctx.lineTo(tx,ty+trainH); ctx.closePath(); ctx.fill();
-  ctx.fillStyle='#1c2e44';
-  for(let i=0;i<7;i++){
-    const wx=tx+16+i*(trainW/7.3);
-    ctx.beginPath(); ctx.roundRect(wx,ty+8,52,38,4); ctx.fill();
-    ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(wx+4,ty+12,18,28); ctx.fillStyle='#1c2e44';
+// ── DRAW GUIDE STRIPS + WAIT ZONES ───────────────────────────────────────────
+function drawZones(){
+  if(!trainArrived) return;
+  waitZones().forEach(z=>{
+    const cx=z.x+z.w/2;
+    // Wait zone — podotactile bumps only, no guide strip
+    ctx.fillStyle='#bca84e'; ctx.fillRect(z.x,z.y,z.w,z.h);
+    ctx.fillStyle='#9c8a38';
+    for(let x=z.x+7;x<z.x+z.w-3;x+=11)
+      for(let y=z.y+7;y<z.y+z.h-3;y+=11){ctx.beginPath();ctx.arc(x,y,3.2,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='rgba(0,0,0,0.18)'; ctx.lineWidth=0.8; ctx.strokeRect(z.x,z.y,z.w,z.h);
+    ctx.fillStyle='rgba(0,0,0,0.25)'; ctx.font='8px monospace'; ctx.textAlign='center';
+    ctx.fillText("ZONE D'ATTENTE",cx,z.y+z.h+11);
+  });
+}
+
+// ── DRAW TRAIN ────────────────────────────────────────────────────────────────
+function drawTrain(){
+  if(TX>W+250) return;
+  const tx=TX,ty=TY;
+
+  // === Body ===
+  ctx.fillStyle=C_SILVER; ctx.fillRect(tx,ty,TW,TH);
+
+  // Roof (slightly darker)
+  ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,TW,TH*0.14);
+
+  // RATP Ligne 8 livery: large blue band top third
+  ctx.fillStyle=C_BLUE; ctx.fillRect(tx,ty+TH*0.14,TW,TH*0.24);
+
+  // White separator line
+  ctx.fillStyle=C_WHITE; ctx.fillRect(tx,ty+TH*0.38,TW,4);
+
+  // Lower body light
+  ctx.fillStyle='#E4E8EC'; ctx.fillRect(tx,ty+TH*0.38+4,TW,TH*0.50);
+
+  // Skirt bottom
+  ctx.fillStyle='#9aa2aa'; ctx.fillRect(tx,ty+TH*0.88,TW,TH*0.12);
+
+  // Left edge panel (end of train car visible at screen left when fully arrived)
+  if(TX<=TX_FINAL+2){
+    ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,18,TH);
+    ctx.fillStyle=C_BLUE; ctx.fillRect(tx,ty+TH*0.14,18,TH*0.24);
+    ctx.fillStyle='#8a9298'; ctx.fillRect(tx,ty+TH*0.88,18,TH*0.12);
   }
-  doors.forEach(d=>{
-    const dx=tx+d.rel*trainW, dy=ty+trainH*0.54, dh=trainH*0.43;
+
+  // Windows row — more windows for full-width train
+  ctx.fillStyle=C_DARK;
+  const wY=ty+7, wH=TH*0.13;
+  for(let i=0;i<14;i++){
+    const wx=tx+14+i*(TW/14.1);
+    ctx.beginPath();ctx.roundRect(wx,wY,Math.min(52,TW/14.1-8),wH,3);ctx.fill();
+    ctx.fillStyle='rgba(140,190,255,0.10)';ctx.fillRect(wx+3,wY+3,12,wH-6);
+    ctx.fillStyle=C_DARK;
+  }
+
+  // Doors
+  DREL.forEach((_,i)=>{
+    const dx=doorCX(i), dy=doorY(), dh=DH;
     if(doorsOpen){
-      ctx.fillStyle='#1e2a38';
-      ctx.fillRect(dx-d.w/2-18,dy,16,dh); ctx.fillRect(dx+d.w/2+2,dy,16,dh);
+      ctx.fillStyle='#1a2838';
+      ctx.fillRect(dx-DW/2-20,dy,18,dh);ctx.fillRect(dx+DW/2+2,dy,18,dh);
       const ig=ctx.createLinearGradient(0,dy,0,dy+dh);
-      ig.addColorStop(0,'#fff9e8'); ig.addColorStop(1,'#f0d880');
-      ctx.fillStyle=ig; ctx.fillRect(dx-d.w/2,dy,d.w,dh);
-      ctx.fillStyle='#333'; ctx.fillRect(dx-d.w/2-2,dy+dh,d.w+4,9);
-      ctx.strokeStyle='rgba(74,158,255,0.25)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(dx,dy+dh/2,80,0,Math.PI*2); ctx.stroke();
+      ig.addColorStop(0,'#fff8e0');ig.addColorStop(1,'#f0cc50');
+      ctx.fillStyle=ig;ctx.fillRect(dx-DW/2,dy,DW,dh);
+      ctx.fillStyle='#282828';ctx.fillRect(dx-DW/2-2,dy+dh,DW+4,8);
+      ctx.strokeStyle='rgba(74,158,255,0.18)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(dx,dy+dh/2,95,0,Math.PI*2);ctx.stroke();
     } else {
-      ctx.fillStyle='#253040'; ctx.strokeStyle='#3a4a5a'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.roundRect(dx-d.w/2-1,dy,d.w+2,dh,2); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle='#445566'; ctx.lineWidth=0.5;
-      ctx.beginPath(); ctx.moveTo(dx,dy+5); ctx.lineTo(dx,dy+dh-5); ctx.stroke();
+      ctx.fillStyle='#2a3c50';ctx.strokeStyle='#3a5060';ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(dx-DW/2,dy,DW,dh,2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#4a6070';ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(dx,dy+5);ctx.lineTo(dx,dy+dh-5);ctx.stroke();
+      ctx.fillStyle='#6a8090';
+      ctx.beginPath();ctx.arc(dx-7,dy+dh/2,3,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(dx+7,dy+dh/2,3,0,Math.PI*2);ctx.fill();
     }
   });
-  ctx.fillStyle='#445'; ctx.font='bold 11px monospace'; ctx.textAlign='left';
-  ctx.fillText('RATP · Ligne 13',tx+14,ty+trainH-8);
+
+  // Label
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.beginPath();ctx.roundRect(tx+10,ty+TH-21,118,17,3);ctx.fill();
+  ctx.fillStyle='#aabbcc';ctx.font='bold 10px monospace';ctx.textAlign='left';
+  ctx.fillText('RATP · Ligne 8',tx+14,ty+TH-9);
 }
 
-function drawPlayer() {
-  const px=player.x, py=player.y;
-  ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.beginPath(); ctx.ellipse(px,py+15,11,4,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#2e2e50'; ctx.fillRect(px-7,py+1,6,15); ctx.fillRect(px+1,py+1,6,15);
-  ctx.fillStyle='#1a1a30'; ctx.fillRect(px-8,py+14,8,5); ctx.fillRect(px,py+14,8,5);
-  ctx.fillStyle='#4a3a7a'; ctx.beginPath(); ctx.roundRect(px-10,py-14,20,18,4); ctx.fill();
-  ctx.fillStyle='#c8875e'; ctx.beginPath(); ctx.arc(px,py-20,9,0,Math.PI*2); ctx.fill();
+// ── DRAW PLAYER ───────────────────────────────────────────────────────────────
+function drawPlayer(){
+  const px=player.x,py=player.y;
+  ctx.fillStyle='rgba(0,0,0,0.18)';ctx.beginPath();ctx.ellipse(px,py+16,12,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#2e2e50';ctx.fillRect(px-7,py+2,6,16);ctx.fillRect(px+1,py+2,6,16);
+  ctx.fillStyle='#1a1a30';ctx.fillRect(px-8,py+15,8,5);ctx.fillRect(px,py+15,8,5);
+  ctx.fillStyle='#4a3a7a';ctx.beginPath();ctx.roundRect(px-10,py-14,20,18,4);ctx.fill();
+  ctx.fillStyle='#c8875e';ctx.beginPath();ctx.arc(px,py-20,9,0,Math.PI*2);ctx.fill();
   ctx.fillStyle='#111';
-  ctx.beginPath(); ctx.roundRect(px-9,py-24,7,5,2); ctx.fill();
-  ctx.beginPath(); ctx.roundRect(px+2,py-24,7,5,2); ctx.fill();
-  ctx.strokeStyle='#333'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(px-2,py-21); ctx.lineTo(px+2,py-21); ctx.stroke();
-  const swing=Math.sin(tick*0.14)*26;
-  const cx0=px+5, cy0=py+3;
-  const cxE=cx0+Math.sin(swing*Math.PI/180)*58;
-  const cyE=cy0+Math.cos(swing*Math.PI/180)*58;
-  ctx.strokeStyle='#ffffff'; ctx.lineWidth=3; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(cx0,cy0); ctx.lineTo(cxE,cyE); ctx.stroke();
-  ctx.fillStyle='#ff2222'; ctx.beginPath(); ctx.arc(cxE,cyE,4.5,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='rgba(255,255,255,0.1)'; ctx.beginPath(); ctx.arc(cxE,cyE,11,0,Math.PI*2); ctx.fill();
+  ctx.beginPath();ctx.roundRect(px-9,py-24,7,5,2);ctx.fill();
+  ctx.beginPath();ctx.roundRect(px+2,py-24,7,5,2);ctx.fill();
+  ctx.strokeStyle='#333';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px-2,py-21);ctx.lineTo(px+2,py-21);ctx.stroke();
+  const sw=Math.sin(tick*0.14)*26;
+  const cxE=px+5+Math.sin(sw*Math.PI/180)*58;
+  const cyE=py+3+Math.cos(sw*Math.PI/180)*58;
+  ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(px+5,py+3);ctx.lineTo(cxE,cyE);ctx.stroke();
+  ctx.fillStyle='#ff2222';ctx.beginPath();ctx.arc(cxE,cyE,4.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.09)';ctx.beginPath();ctx.arc(cxE,cyE,11,0,Math.PI*2);ctx.fill();
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
-function isInWaitZone() {
-  return player.x>waitZone.x && player.x<waitZone.x+waitZone.w &&
-         player.y>waitZone.y && player.y<waitZone.y+waitZone.h;
-}
-function nearestDoorDist() {
-  if(!trainArrived||!doorsOpen) return 9999;
-  let min=9999;
-  doors.forEach(d=>{
-    const dx=trainX+d.rel*trainW, dy=trainTopY+trainH;
-    const dist=Math.hypot(player.x-dx,player.y-dy);
-    if(dist<min) min=dist;
-  });
-  return min;
-}
-function isInsideTrain() {
-  if(!trainArrived||!doorsOpen) return false;
-  let nearDoor=false;
-  doors.forEach(d=>{ const dx=trainX+d.rel*trainW; if(Math.abs(player.x-dx)<d.w/2+10) nearDoor=true; });
-  return nearDoor && player.y<trainTopY+trainH-5 && player.x>trainX && player.x<trainX+trainW;
-}
-function showAnnouncement() {
+function showAnnounce(){
   document.getElementById('announcement').style.display='block';
-  setTimeout(()=>{
-    document.getElementById('announcement').style.display='none';
-    document.getElementById('success').style.display='flex';
-    state='success';
-  },5000);
+  setTimeout(()=>{document.getElementById('announcement').style.display='none';document.getElementById('success').style.display='flex';state='success';},5000);
 }
 
-// ── KEYS ─────────────────────────────────────────────────────────────────────
 const keys={};
 document.addEventListener('keydown',e=>{keys[e.key]=true;e.preventDefault();});
 document.addEventListener('keyup',  e=>{keys[e.key]=false;});
 
-// ── GAME LOOP ─────────────────────────────────────────────────────────────────
-function gameLoop() {
+function gameLoop(){
   tick++;
   if(state!=='playing'&&state!=='boarding'){requestAnimationFrame(gameLoop);return;}
-  if(keys['ArrowLeft'])  player.x-=player.speed;
-  if(keys['ArrowRight']) player.x+=player.speed;
-  if(keys['ArrowUp'])    player.y-=player.speed;
-  if(keys['ArrowDown'])  player.y+=player.speed;
-  player.x=Math.max(platformLeft+12,Math.min(platformRight-12,player.x));
-  player.y=Math.max(platformTop+8,  Math.min(platformBottom-10,player.y));
+  if(keys['ArrowLeft'])  player.x-=player.spd;
+  if(keys['ArrowRight']) player.x+=player.spd;
+  if(keys['ArrowUp'])    player.y-=player.spd;
+  if(keys['ArrowDown'])  player.y+=player.spd;
+  player.x=Math.max(PL+12,Math.min(PR-12,player.x));
+  // Near an open door → can walk into the train (above PT)
+  const nearAnyDoor = doorsOpen && DREL.some((_,i)=>Math.abs(player.x-doorCX(i))<DW/2+14);
+  const minY = nearAnyDoor ? TY+20 : PT+20;
+  player.y=Math.max(minY,Math.min(PB-10,player.y));
 
-  trainArrivedTimer++;
-  if(!trainArrived&&trainArrivedTimer>200){
-    trainX=Math.max(platformLeft+8,trainX-7);
-    if(trainX<=platformLeft+8){
+  // Train arrival
+  trainTimer++;
+  if(!trainArrived&&trainTimer>180){
+    TX=Math.max(TX_FINAL,TX-9);
+    if(TX<=TX_FINAL){
       trainArrived=true;
-      updateStatus('🚆 Le train est en gare. Attendez l\'ouverture des portes...');
-      setTimeout(()=>{ doorsOpen=true; updateStatus('🚪 Portes ouvertes — approchez-vous pour monter !'); },1400);
+      setStatus('🚆 Le train est en gare. Attendez l\'ouverture des portes...');
+      setTimeout(()=>{doorsOpen=true;setStatus('🚪 Portes ouvertes — rejoignez une zone podotactile !');},1400);
     }
   }
 
-  const inWZ=isInWaitZone();
-  if(inWZ&&!inWaitZoneBefore) updateStatus('✓ Zone podotactile atteinte. Le train arrive bientôt...');
-  if(!inWZ&&inWaitZoneBefore&&!trainArrived) updateStatus("Retrouvez la zone d'attente podotactile...");
-  inWaitZoneBefore=inWZ;
+  // Zone feedback
+  const inZ=inAnyZone();
+  if(inZ&&!inZoneBefore) setStatus('✓ Zone podotactile ! Avancez vers la porte...');
+  if(!inZ&&inZoneBefore&&!doorsOpen) setStatus('Rejoignez une zone d\'attente podotactile...');
+  inZoneBefore=inZ;
 
+  // Vibration
   if(doorsOpen&&state==='playing'){
-    const dist=nearestDoorDist();
-    if(dist<60){      setVibLevel(3); updateStatus('📳📳📳 Porte à portée — entrez dans le wagon !'); }
-    else if(dist<110){ setVibLevel(2); updateStatus('📳📳 Porte détectée — continuez...'); }
-    else if(dist<180){ setVibLevel(1); updateStatus('📳 Signal faible — une porte est proche...'); }
-    else {             setVibLevel(0); }
-  } else if(!doorsOpen){ setVibLevel(0); }
+    const d=nearDoorDist();
+    if(d<55){setVib(3);setStatus('📳📳📳 Porte à portée — entrez !');}
+    else if(d<110){setVib(2);setStatus('📳📳 Porte proche...');}
+    else if(d<180){setVib(1);setStatus('📳 Signal faible — porte détectée...');}
+    else setVib(0);
+  } else if(!doorsOpen) setVib(0);
 
-  if(isInsideTrain()&&state==='playing'&&!announceShown){
-    announceShown=true; state='boarding';
-    setVibLevel(0); supabaseUpdate(0);
-    updateStatus('🎙 Annonce vocale en cours...');
-    showAnnouncement();
+  // Board
+  if(insideTrain()&&state==='playing'&&!announced){
+    announced=true;state='boarding';setVib(0);sbUpdate(0);
+    setStatus('🎙 Annonce vocale...');
+    speak(SPEECH_MSG);
+    showAnnounce();
   }
 
+  // Render
   ctx.clearRect(0,0,W,H);
-  drawBg(); drawPlatform(); drawTrain();
+  drawBg(); drawPlatform(); drawZones(); drawTrain();
 
-  const wDist=Math.hypot(player.x-(waitZone.x+waitZone.w/2),player.y-(waitZone.y+waitZone.h/2));
-  if(wDist<100){ ctx.strokeStyle=`rgba(255,215,0,${0.6*(1-wDist/100)})`; ctx.lineWidth=3; ctx.strokeRect(waitZone.x-3,waitZone.y-3,waitZone.w+6,waitZone.h+6); }
+  // Zone glow
+  if(trainArrived) waitZones().forEach(z=>{
+    const d=Math.hypot(player.x-(z.x+z.w/2),player.y-(z.y+z.h/2));
+    if(d<110){ctx.strokeStyle=`rgba(255,215,0,${0.7*(1-d/110)})`;ctx.lineWidth=3;ctx.strokeRect(z.x-2,z.y-2,z.w+4,z.h+4);}
+  });
 
   drawPlayer();
 
+  // Guide line to nearest door
   if(doorsOpen&&state==='playing'){
-    const dist=nearestDoorDist();
-    if(dist<200){
-      let nearD=null, nearDist2=9999;
-      doors.forEach(d=>{ const ddx=trainX+d.rel*trainW,ddy=trainTopY+trainH,dd=Math.hypot(player.x-ddx,player.y-ddy); if(dd<nearDist2){nearDist2=dd;nearD={x:ddx,y:ddy};} });
-      if(nearD){ ctx.setLineDash([6,4]); ctx.strokeStyle=`rgba(74,158,255,${(1-dist/200)*0.6})`; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(player.x,player.y-20); ctx.lineTo(nearD.x,nearD.y); ctx.stroke(); ctx.setLineDash([]); }
+    const dists=DREL.map((_,i)=>({i,d:Math.hypot(player.x-doorCX(i),player.y-(TY+TH))}));
+    dists.sort((a,b)=>a.d-b.d);
+    const n=dists[0];
+    if(n.d<220){
+      ctx.setLineDash([6,4]);ctx.strokeStyle=`rgba(74,158,255,${(1-n.d/220)*0.55})`;ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(player.x,player.y-20);ctx.lineTo(doorCX(n.i),TY+TH+4);ctx.stroke();ctx.setLineDash([]);
     }
   }
   requestAnimationFrame(gameLoop);
 }
 
-// ── EVENTS ────────────────────────────────────────────────────────────────────
 document.getElementById('startBtn').addEventListener('click',()=>{
   document.getElementById('intro').style.display='none';
+  unlockSpeech();
   state='playing';
-  updateStatus("Utilisez les flèches — trouvez la zone d'attente podotactile !");
+  setStatus('Attendez le train — restez sur le quai !');
 });
 document.getElementById('restartBtn').addEventListener('click',()=>{
   document.getElementById('success').style.display='none';
-  player.x=W*0.72; player.y=H*0.70;
-  trainX=W+300; trainArrived=false; trainArrivedTimer=0; doorsOpen=false;
-  vibLevel=-1; announceShown=false; inWaitZoneBefore=false;
-  state='playing'; setVibLevel(0);
+  player.x=W*0.62;player.y=H*0.80;TX=W+400;trainArrived=false;trainTimer=0;doorsOpen=false;
+  vibLevel=-1;announced=false;inZoneBefore=false;lastSpokenLevel=-1;state='playing';setVib(0);
   document.getElementById('announcement').style.display='none';
-  updateStatus("Trouvez la zone d'attente podotactile !");
+  setStatus('Attendez le train sur le quai !');
 });
-
-window.addEventListener('load',()=>{ setTimeout(generateQR,400); });
+window.addEventListener('load',()=>setTimeout(generateQR,400));
 requestAnimationFrame(gameLoop);
 </script>
 </body>
