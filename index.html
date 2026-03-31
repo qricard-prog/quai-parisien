@@ -15,7 +15,6 @@ canvas { display:block; }
   background:rgba(0,0,0,0.65); padding:10px 14px;
   border-radius:8px; line-height:1.9; pointer-events:none;
 }
-
 #status {
   position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
   color:#fff; font-size:15px; font-weight:bold;
@@ -35,21 +34,10 @@ canvas { display:block; }
   display:flex; align-items:center; justify-content:center;
   font-size:22px; position:relative;
 }
-#phone::before {
-  content:''; position:absolute; top:6px;
-  width:14px; height:4px; background:#333; border-radius:2px;
-}
-#phone::after {
-  content:''; position:absolute; bottom:8px;
-  width:22px; height:4px; background:#333; border-radius:2px;
-}
-#vib-rings {
-  display:flex; gap:3px; align-items:center;
-}
-.vring {
-  width:6px; height:6px; border-radius:50%;
-  background:#FF6B35; opacity:0;
-}
+#phone::before { content:''; position:absolute; top:6px; width:14px; height:4px; background:#333; border-radius:2px; }
+#phone::after  { content:''; position:absolute; bottom:8px; width:22px; height:4px; background:#333; border-radius:2px; }
+#vib-rings { display:flex; gap:3px; align-items:center; }
+.vring { width:6px; height:6px; border-radius:50%; background:#FF6B35; opacity:0; }
 #vib-label { color:#FF6B35; font-size:10px; font-weight:bold; letter-spacing:1px; }
 
 @keyframes vibrate-weak  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-3px)} 75%{transform:translateX(3px)} }
@@ -57,16 +45,25 @@ canvas { display:block; }
 @keyframes vibrate-strong{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px) rotate(-3deg)} 50%{transform:translateX(7px) rotate(3deg)} 80%{transform:translateX(-5px) rotate(-2deg)} }
 @keyframes ring-pulse { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:1;transform:scale(1)} }
 
-.vib-1 #phone { animation:vibrate-weak   0.2s infinite; }
-.vib-2 #phone { animation:vibrate-med    0.15s infinite; }
-.vib-3 #phone { animation:vibrate-strong 0.1s infinite; }
+.vib-1 #phone { animation:vibrate-weak   0.22s infinite; }
+.vib-2 #phone { animation:vibrate-med    0.16s infinite; }
+.vib-3 #phone { animation:vibrate-strong 0.10s infinite; }
 .vib-1 .vring:nth-child(1) { animation:ring-pulse 0.6s infinite; }
-.vib-2 .vring:nth-child(1),
-.vib-2 .vring:nth-child(2) { animation:ring-pulse 0.4s infinite; }
+.vib-2 .vring:nth-child(1),.vib-2 .vring:nth-child(2) { animation:ring-pulse 0.4s infinite; }
 .vib-2 .vring:nth-child(2) { animation-delay:0.15s; }
 .vib-3 .vring { animation:ring-pulse 0.3s infinite; }
 .vib-3 .vring:nth-child(2) { animation-delay:0.1s; }
 .vib-3 .vring:nth-child(3) { animation-delay:0.2s; }
+
+/* Supabase status dot */
+#sync-dot {
+  position:absolute; bottom:60px; right:18px;
+  display:flex; align-items:center; gap:6px;
+  font-size:11px; color:#888; pointer-events:none;
+}
+#sync-dot span { width:8px; height:8px; border-radius:50%; background:#555; display:inline-block; }
+#sync-dot.connected span { background:#4aff88; box-shadow:0 0 6px #4aff88; }
+#sync-dot.connected { color:#4aff88; }
 
 /* Announcement */
 #announcement {
@@ -86,15 +83,13 @@ canvas { display:block; }
 
 /* QR Panel */
 #qr-panel {
-  position:absolute; bottom:60px; right:14px;
+  position:absolute; bottom:70px; right:14px;
   background:rgba(0,0,0,0.82); border:1px solid #334;
   border-radius:12px; padding:14px; text-align:center;
-  color:#aaa; font-size:11px; line-height:1.7;
-  width:150px;
+  color:#aaa; font-size:11px; line-height:1.7; width:150px;
 }
 #qr-panel canvas { border-radius:6px; display:block; margin:0 auto 8px; }
 #qr-panel .qr-title { color:#4a9eff; font-size:12px; font-weight:bold; margin-bottom:6px; }
-#qr-panel .qr-sub { color:#888; font-size:10px; }
 
 /* Intro */
 #intro {
@@ -106,30 +101,20 @@ canvas { display:block; }
 }
 #intro h1 { font-size:22px; color:#4a9eff; margin-bottom:14px; }
 #intro p  { font-size:13px; color:#ccc; line-height:1.85; max-width:390px; margin-bottom:5px; }
-.key { display:inline-block; background:#2a2a3a; border:1px solid #555;
-       padding:2px 8px; border-radius:4px; font-family:monospace; font-size:12px; }
-#startBtn {
-  margin-top:22px; padding:13px 36px;
-  background:#4a9eff; color:#fff; border:none;
-  border-radius:8px; font-size:16px; cursor:pointer; font-family:monospace;
-}
+.key { display:inline-block; background:#2a2a3a; border:1px solid #555; padding:2px 8px; border-radius:4px; font-family:monospace; font-size:12px; }
+#startBtn { margin-top:22px; padding:13px 36px; background:#4a9eff; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; font-family:monospace; }
 #startBtn:hover { background:#2a7ee0; }
 
 /* Success */
 #success {
-  position:absolute; inset:0;
-  background:rgba(0,0,0,0.88);
+  position:absolute; inset:0; background:rgba(0,0,0,0.88);
   display:none; flex-direction:column;
   align-items:center; justify-content:center;
   color:#fff; z-index:300; text-align:center;
 }
 #success h2 { font-size:24px; color:#4aff88; margin-bottom:10px; }
 #success p  { color:#ccc; font-size:14px; margin-bottom:20px; }
-#restartBtn {
-  padding:11px 30px; background:#4aff88;
-  color:#000; border:none; border-radius:8px;
-  font-size:15px; cursor:pointer; font-weight:bold;
-}
+#restartBtn { padding:11px 30px; background:#4aff88; color:#000; border:none; border-radius:8px; font-size:15px; cursor:pointer; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -146,12 +131,12 @@ canvas { display:block; }
 <div id="vibration">
   <div id="phone">📱</div>
   <div id="vib-rings">
-    <div class="vring"></div>
-    <div class="vring"></div>
-    <div class="vring"></div>
+    <div class="vring"></div><div class="vring"></div><div class="vring"></div>
   </div>
   <div id="vib-label">VIBRATION</div>
 </div>
+
+<div id="sync-dot"><span></span> mobile sync</div>
 
 <div id="announcement">
   <div class="ann-icon">🔊</div>
@@ -162,532 +147,351 @@ canvas { display:block; }
 
 <div id="qr-panel">
   <div class="qr-title">📱 Ressentir</div>
-  <canvas id="qrcode" width="110" height="110"></canvas>
-  <div class="qr-sub">Scannez pour vibrer<br>avec votre mobile</div>
+  <canvas id="qrcode" width="122" height="122"></canvas>
+  <div style="color:#888;font-size:10px;">Scannez sur Android<br>pour vibrer en live</div>
 </div>
 
 <div id="intro">
   <h1>🦯 Le Quai Parisien</h1>
   <p>Vous simulez l'expérience d'un voyageur non-voyant muni d'une canne blanche.<br>
-  Votre mission : rejoindre la <strong style="color:#FFD700">zone podotactile</strong> (texture différente), puis monter dans le train.</p>
+  Rejoignez la <strong style="color:#FFD700">zone podotactile</strong>, puis montez dans le train.</p>
   <p style="margin-top:10px;">
-    <span class="key">←</span> <span class="key">→</span> Se déplacer &nbsp;&nbsp;
+    <span class="key">←</span> <span class="key">→</span> Se déplacer &nbsp;
     <span class="key">↑</span> <span class="key">↓</span> Avancer / Reculer
   </p>
-  <p style="color:#888;font-size:11px;margin-top:10px;">Le train arrive automatiquement. Quand vous approchez des portes : vibration.<br>En entrant dans le wagon : annonce vocale automatique.</p>
-  <p style="color:#4a9eff;font-size:11px;margin-top:8px;">📱 Scannez le QR code (Android) pour ressentir la vibration sur votre téléphone.</p>
+  <p style="color:#4a9eff;font-size:11px;margin-top:10px;">📱 Scannez le QR code (Android) — votre téléphone vibrera en temps réel.</p>
   <button id="startBtn">Commencer</button>
 </div>
 
 <div id="success">
   <h2>✅ Vous êtes monté dans le train !</h2>
-  <p>Mission accomplie. L'annonce vocale confirme la direction.<br>Bonne route vers Saint-Denis Université.</p>
+  <p>Mission accomplie. Bonne route vers Saint-Denis Université.</p>
   <button id="restartBtn">Rejouer</button>
 </div>
 
-<!-- QR code lib -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-// Replace with your GitHub Pages URL after deployment
-// e.g. https://votrenom.github.io/quai-parisien/mobile.html
-const MOBILE_URL = 'https://qricard-prog.github.io/quai-parisien/mobile.html';
+// ── SUPABASE CONFIG ──────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://naypxosgtdhqhgatvsaz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Oe-bv2X-wRCvg_AHWbUqlg_fdBAH5R3';
+const MOBILE_URL   = 'https://qricard-prog.github.io/quai-parisien/mobile.html';
 
-// ─── CANVAS SETUP ─────────────────────────────────────────────────────────────
+// ── SUPABASE CLIENT (via CDN REST + Realtime) ────────────────────────────────
+async function supabaseUpdate(level) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ level, updated_at: new Date().toISOString() })
+    });
+  } catch(e) { console.warn('Supabase update failed', e); }
+}
+
+// ── CANVAS SETUP ─────────────────────────────────────────────────────────────
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
+const ctx    = canvas.getContext('2d');
+canvas.width  = window.innerWidth;
 canvas.height = window.innerHeight;
 const W = canvas.width, H = canvas.height;
 
-// ─── GAME STATE ───────────────────────────────────────────────────────────────
+// ── GAME STATE ───────────────────────────────────────────────────────────────
 let state = 'intro';
-let vibLevel = 0; // 0=off 1=weak 2=med 3=strong
+let vibLevel = 0;
 let trainArrived = false;
 let trainArrivedTimer = 0;
 let doorsOpen = false;
 let tick = 0;
 let inWaitZoneBefore = false;
 let announceShown = false;
-let broadcastChannel = null;
+let lastSentLevel = -1;
 
-// ─── PLAYER ───────────────────────────────────────────────────────────────────
-const player = {
-  x: W * 0.72,
-  y: H * 0.70,
-  speed: 3
-};
+// ── PLAYER ───────────────────────────────────────────────────────────────────
+const player = { x: W * 0.72, y: H * 0.70, speed: 3 };
 
-// ─── PLATFORM GEOMETRY ────────────────────────────────────────────────────────
+// ── PLATFORM GEOMETRY ────────────────────────────────────────────────────────
 const platformTop    = H * 0.34;
 const platformBottom = H * 0.86;
 const platformLeft   = W * 0.04;
 const platformRight  = W * 0.96;
 
-// ─── WAITING ZONE (podotactile) ───────────────────────────────────────────────
-// Positioned towards center-right of platform
-const waitZone = {
-  x: W * 0.42,
-  y: H * 0.56,
-  w: W * 0.22,
-  h: H * 0.15
-};
+// ── WAITING ZONE ─────────────────────────────────────────────────────────────
+const waitZone = { x: W*0.42, y: H*0.56, w: W*0.22, h: H*0.15 };
 
-// ─── TRAIN ────────────────────────────────────────────────────────────────────
-// Train stops at platform edge (platformTop area)
-// Wait zone is ~1.5–2m away from train doors (represented as ~120–160px gap in game scale)
-const trainW = W * 0.58;
-let trainX   = W + 300;
+// ── TRAIN ────────────────────────────────────────────────────────────────────
+const trainW  = W * 0.58;
+let   trainX  = W + 300;
 const trainTopY = platformTop - 5;
 const trainH    = H * 0.30;
+const doors = [{ rel:0.18, w:58 }, { rel:0.50, w:58 }, { rel:0.78, w:58 }];
 
-// Door positions (relative to trainX)
-const doors = [
-  { rel: 0.18, w: 58 },
-  { rel: 0.50, w: 58 },
-  { rel: 0.78, w: 58 }
-];
-
-// ─── QR CODE ──────────────────────────────────────────────────────────────────
+// ── QR CODE ──────────────────────────────────────────────────────────────────
 function generateQR() {
   const qc = document.getElementById('qrcode');
-  const qctx = qc.getContext('2d');
-  qctx.fillStyle = '#ffffff';
-  qctx.fillRect(0,0,110,110);
-
-  // Use qrcodejs if available
   if(typeof QRCode !== 'undefined') {
     const tmp = document.createElement('div');
-    new QRCode(tmp, {
-      text: MOBILE_URL,
-      width: 100, height: 100,
-      colorDark: '#000000', colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
+    new QRCode(tmp, { text:MOBILE_URL, width:112, height:112, colorDark:'#000000', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M });
     setTimeout(() => {
       const img = tmp.querySelector('img') || tmp.querySelector('canvas');
-      if(img) {
-        qctx.drawImage(img, 5, 5, 100, 100);
-      }
-    }, 200);
-  } else {
-    // Fallback pattern
-    qctx.fillStyle = '#000';
-    qctx.font = 'bold 9px monospace';
-    qctx.textAlign = 'center';
-    qctx.fillText('QR CODE', 55, 55);
-    qctx.fillText(MOBILE_URL.slice(0,25), 55, 70);
+      if(img) { const ctx2=qc.getContext('2d'); ctx2.fillStyle='#fff'; ctx2.fillRect(0,0,122,122); ctx2.drawImage(img,5,5,112,112); }
+    }, 300);
   }
 }
 
-// ─── BROADCAST TO MOBILE ──────────────────────────────────────────────────────
-// Uses BroadcastChannel for same-origin tabs, and localStorage for cross-tab
-function broadcastVib(level) {
-  try {
-    localStorage.setItem('quai_vib', JSON.stringify({ level, t: Date.now() }));
-  } catch(e) {}
+// ── SYNC STATUS ──────────────────────────────────────────────────────────────
+function setSyncStatus(connected) {
+  document.getElementById('sync-dot').className = connected ? 'connected' : '';
 }
 
-// ─── DRAWING ──────────────────────────────────────────────────────────────────
-function drawBg() {
-  // Dark tunnel background
-  ctx.fillStyle = '#18182a';
-  ctx.fillRect(0, 0, W, H);
+// Check connectivity
+fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1&select=level`, {
+  headers:{ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}` }
+}).then(r => setSyncStatus(r.ok)).catch(() => setSyncStatus(false));
 
-  // Ceiling/tunnel arch
+// ── VIBRATION UI ─────────────────────────────────────────────────────────────
+function setVibLevel(level) {
+  if(level === vibLevel) return;
+  vibLevel = level;
+  const vibEl  = document.getElementById('vibration');
+  const phoneEl = document.getElementById('phone');
+  phoneEl.className = '';
+  vibEl.style.display = level > 0 ? 'flex' : 'none';
+  if(level > 0) phoneEl.className = 'vib-' + level;
+
+  // Throttle Supabase writes — only send when level changes
+  if(level !== lastSentLevel) {
+    lastSentLevel = level;
+    supabaseUpdate(level);
+  }
+}
+
+function updateStatus(msg) { document.getElementById('status').textContent = msg; }
+
+// ── DRAWING ──────────────────────────────────────────────────────────────────
+function drawBg() {
+  ctx.fillStyle = '#18182a'; ctx.fillRect(0,0,W,H);
   const cg = ctx.createLinearGradient(0,0,0,platformTop);
   cg.addColorStop(0,'#101018'); cg.addColorStop(1,'#323248');
-  ctx.fillStyle = cg;
-  ctx.fillRect(0, 0, W, platformTop);
-
-  // Back wall (above platform)
-  ctx.fillStyle = '#3a3a52';
-  ctx.fillRect(0, platformTop - 46, W, 48);
-
-  // Ceiling light strips
-  for(let x = platformLeft + 20; x < platformRight; x += 90) {
-    ctx.fillStyle = 'rgba(255,250,210,0.07)';
-    ctx.fillRect(x, platformTop - 44, 60, 5);
-    // Subtle glow downward
-    const lg = ctx.createLinearGradient(0,platformTop-44,0,platformTop-10);
-    lg.addColorStop(0,'rgba(255,245,180,0.04)'); lg.addColorStop(1,'rgba(255,245,180,0)');
-    ctx.fillStyle = lg;
-    ctx.fillRect(x, platformTop-44, 60, 34);
+  ctx.fillStyle=cg; ctx.fillRect(0,0,W,platformTop);
+  ctx.fillStyle='#3a3a52'; ctx.fillRect(0,platformTop-46,W,48);
+  for(let x=platformLeft+20;x<platformRight;x+=90){
+    ctx.fillStyle='rgba(255,250,210,0.07)'; ctx.fillRect(x,platformTop-44,60,5);
   }
-
-  // RATP signs
-  [[W*0.14,28],[W*0.55,28]].forEach(([sx,sy]) => {
-    ctx.fillStyle = '#0055A4';
-    ctx.beginPath(); ctx.roundRect(sx,sy,130,34,6); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 13px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('MONTPARNASSE', sx+65, sy+22);
+  [[W*0.14,28],[W*0.55,28]].forEach(([sx,sy])=>{
+    ctx.fillStyle='#0055A4'; ctx.beginPath(); ctx.roundRect(sx,sy,130,34,6); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='bold 13px monospace'; ctx.textAlign='center';
+    ctx.fillText('MONTPARNASSE',sx+65,sy+22);
   });
-  ctx.fillStyle = '#0055A4';
-  ctx.beginPath(); ctx.roundRect(W*0.75,28,90,34,6); ctx.fill();
-  ctx.fillStyle = '#fff'; ctx.font = 'bold 13px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('LIGNE 13', W*0.75+45, 50);
-
-  // Rails in pit
-  ctx.strokeStyle = '#404058'; ctx.lineWidth = 4;
+  ctx.fillStyle='#0055A4'; ctx.beginPath(); ctx.roundRect(W*0.75,28,90,34,6); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='bold 13px monospace'; ctx.textAlign='center';
+  ctx.fillText('LIGNE 13',W*0.75+45,50);
+  ctx.strokeStyle='#404058'; ctx.lineWidth=4;
   ctx.beginPath(); ctx.moveTo(0,platformTop-10); ctx.lineTo(trainX-10,platformTop-10); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(0,platformTop-24); ctx.lineTo(trainX-10,platformTop-24); ctx.stroke();
-
-  // Pillars
-  ctx.fillStyle = '#303045';
-  [W*0.12,W*0.30,W*0.58,W*0.76,W*0.90].forEach(px => {
-    ctx.fillRect(px-9, platformTop, 18, platformBottom-platformTop);
-    ctx.fillStyle = '#404058';
-    ctx.fillRect(px-11, platformTop, 22, 14);
-    ctx.fillStyle = '#303045';
+  ctx.fillStyle='#303045';
+  [W*0.12,W*0.30,W*0.58,W*0.76,W*0.90].forEach(px=>{
+    ctx.fillRect(px-9,platformTop,18,platformBottom-platformTop);
+    ctx.fillStyle='#404058'; ctx.fillRect(px-11,platformTop,22,14); ctx.fillStyle='#303045';
   });
 }
 
 function drawPlatform() {
-  // Concrete base
-  ctx.fillStyle = '#7e7e8e';
-  ctx.fillRect(platformLeft, platformTop, platformRight-platformLeft, platformBottom-platformTop);
-
-  // Tile grid
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 0.5;
-  for(let x = platformLeft; x < platformRight; x += 38) {
-    ctx.beginPath(); ctx.moveTo(x,platformTop); ctx.lineTo(x,platformBottom); ctx.stroke();
+  ctx.fillStyle='#7e7e8e'; ctx.fillRect(platformLeft,platformTop,platformRight-platformLeft,platformBottom-platformTop);
+  ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=0.5;
+  for(let x=platformLeft;x<platformRight;x+=38){ ctx.beginPath(); ctx.moveTo(x,platformTop); ctx.lineTo(x,platformBottom); ctx.stroke(); }
+  for(let y=platformTop;y<platformBottom;y+=38){ ctx.beginPath(); ctx.moveTo(platformLeft,y); ctx.lineTo(platformRight,y); ctx.stroke(); }
+  ctx.fillStyle='#F5C800'; ctx.fillRect(platformLeft,platformTop,platformRight-platformLeft,24);
+  ctx.fillStyle='#D4A800';
+  for(let x=platformLeft+9;x<platformRight;x+=16){ ctx.beginPath(); ctx.arc(x,platformTop+12,5.5,0,Math.PI*2); ctx.fill(); }
+  const stX=waitZone.x+waitZone.w/2-14;
+  ctx.fillStyle='#c8b464'; ctx.fillRect(stX,platformTop+24,28,waitZone.y-platformTop-24);
+  ctx.fillStyle='#a89448';
+  for(let y=platformTop+28;y<waitZone.y-2;y+=13){ ctx.fillRect(stX+4,y,20,7); }
+  ctx.fillStyle='#c4b05a'; ctx.fillRect(waitZone.x,waitZone.y,waitZone.w,waitZone.h);
+  ctx.fillStyle='#a09040';
+  for(let x=waitZone.x+8;x<waitZone.x+waitZone.w-4;x+=13){
+    for(let y=waitZone.y+8;y<waitZone.y+waitZone.h-4;y+=13){ ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); }
   }
-  for(let y = platformTop; y < platformBottom; y += 38) {
-    ctx.beginPath(); ctx.moveTo(platformLeft,y); ctx.lineTo(platformRight,y); ctx.stroke();
-  }
-
-  // Danger strip at edge (yellow bumps)
-  ctx.fillStyle = '#F5C800';
-  ctx.fillRect(platformLeft, platformTop, platformRight-platformLeft, 24);
-  ctx.fillStyle = '#D4A800';
-  for(let x = platformLeft+9; x < platformRight; x += 16) {
-    ctx.beginPath(); ctx.arc(x, platformTop+12, 5.5, 0, Math.PI*2); ctx.fill();
-  }
-
-  // Tactile guide strip (ligne directrice) leading to wait zone
-  const stX = waitZone.x + waitZone.w/2 - 14;
-  ctx.fillStyle = '#c8b464';
-  ctx.fillRect(stX, platformTop+24, 28, waitZone.y - platformTop - 24);
-  ctx.fillStyle = '#a89448';
-  for(let y = platformTop+28; y < waitZone.y-2; y += 13) {
-    ctx.fillRect(stX+4, y, 20, 7);
-  }
-
-  // Wait zone — podotactile round bumps (éveil vigilance)
-  ctx.fillStyle = '#c4b05a';
-  ctx.fillRect(waitZone.x, waitZone.y, waitZone.w, waitZone.h);
-  ctx.fillStyle = '#a09040';
-  const bs = 13;
-  for(let x = waitZone.x+8; x < waitZone.x+waitZone.w-4; x += bs) {
-    for(let y = waitZone.y+8; y < waitZone.y+waitZone.h-4; y += bs) {
-      ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
-    }
-  }
-
-  // Wait zone label
-  ctx.fillStyle = 'rgba(0,0,0,0.28)'; ctx.font = '9px monospace'; ctx.textAlign = 'center';
-  ctx.fillText("ZONE D'ATTENTE PODOTACTILE", waitZone.x+waitZone.w/2, waitZone.y+waitZone.h+13);
-
-  // Platform edge lip
-  ctx.fillStyle = '#4e4e62';
-  ctx.fillRect(platformLeft, platformTop-12, platformRight-platformLeft, 12);
-  ctx.fillStyle = '#3a3a50';
-  ctx.fillRect(platformLeft, platformTop-18, platformRight-platformLeft, 6);
+  ctx.fillStyle='rgba(0,0,0,0.28)'; ctx.font='9px monospace'; ctx.textAlign='center';
+  ctx.fillText("ZONE D'ATTENTE PODOTACTILE",waitZone.x+waitZone.w/2,waitZone.y+waitZone.h+13);
+  ctx.fillStyle='#4e4e62'; ctx.fillRect(platformLeft,platformTop-12,platformRight-platformLeft,12);
+  ctx.fillStyle='#3a3a50'; ctx.fillRect(platformLeft,platformTop-18,platformRight-platformLeft,6);
 }
 
 function drawTrain() {
-  if(trainX > W+150) return;
-  const tx = trainX, ty = trainTopY;
-
-  // Body
-  ctx.fillStyle = '#ccd4dc'; ctx.fillRect(tx,ty,trainW,trainH);
-
-  // Livery stripe RATP
-  ctx.fillStyle = '#0055A4'; ctx.fillRect(tx, ty+trainH*0.2, trainW, 20);
-  ctx.fillStyle = '#EF4135'; ctx.fillRect(tx, ty+trainH*0.2+20, trainW, 9);
-
-  // Nose / front (left side of train as it enters from right)
-  ctx.fillStyle = '#b0bcc8';
+  if(trainX>W+150) return;
+  const tx=trainX, ty=trainTopY;
+  ctx.fillStyle='#ccd4dc'; ctx.fillRect(tx,ty,trainW,trainH);
+  ctx.fillStyle='#0055A4'; ctx.fillRect(tx,ty+trainH*0.2,trainW,20);
+  ctx.fillStyle='#EF4135'; ctx.fillRect(tx,ty+trainH*0.2+20,trainW,9);
+  ctx.fillStyle='#b0bcc8';
   ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx-22,ty+trainH*0.5); ctx.lineTo(tx,ty+trainH); ctx.closePath(); ctx.fill();
-
-  // Windows
-  ctx.fillStyle = '#1c2e44';
+  ctx.fillStyle='#1c2e44';
   for(let i=0;i<7;i++){
-    const wx = tx + 16 + i*(trainW/7.3);
-    ctx.beginPath(); ctx.roundRect(wx, ty+8, 52, 38, 4); ctx.fill();
+    const wx=tx+16+i*(trainW/7.3);
+    ctx.beginPath(); ctx.roundRect(wx,ty+8,52,38,4); ctx.fill();
     ctx.fillStyle='rgba(255,255,255,0.06)'; ctx.fillRect(wx+4,ty+12,18,28); ctx.fillStyle='#1c2e44';
   }
-
-  // Doors
-  doors.forEach(d => {
-    const dx = tx + d.rel*trainW;
-    const dy = ty + trainH*0.54;
-    const dh = trainH*0.43;
+  doors.forEach(d=>{
+    const dx=tx+d.rel*trainW, dy=ty+trainH*0.54, dh=trainH*0.43;
     if(doorsOpen){
-      // Open = split panels slide apart
       ctx.fillStyle='#1e2a38';
-      ctx.fillRect(dx - d.w/2 - 18, dy, 16, dh);
-      ctx.fillRect(dx + d.w/2 + 2,  dy, 16, dh);
-      // Interior warm glow
-      const ig = ctx.createLinearGradient(0,dy,0,dy+dh);
+      ctx.fillRect(dx-d.w/2-18,dy,16,dh); ctx.fillRect(dx+d.w/2+2,dy,16,dh);
+      const ig=ctx.createLinearGradient(0,dy,0,dy+dh);
       ig.addColorStop(0,'#fff9e8'); ig.addColorStop(1,'#f0d880');
-      ctx.fillStyle=ig;
-      ctx.fillRect(dx - d.w/2, dy, d.w, dh);
-      // Step
-      ctx.fillStyle='#333';
-      ctx.fillRect(dx-d.w/2-2, dy+dh, d.w+4, 9);
-      // Proximity ring around open door (visual cue)
-      ctx.strokeStyle='rgba(74,158,255,0.3)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.arc(dx, dy+dh/2, 80, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle=ig; ctx.fillRect(dx-d.w/2,dy,d.w,dh);
+      ctx.fillStyle='#333'; ctx.fillRect(dx-d.w/2-2,dy+dh,d.w+4,9);
+      ctx.strokeStyle='rgba(74,158,255,0.25)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(dx,dy+dh/2,80,0,Math.PI*2); ctx.stroke();
     } else {
-      ctx.fillStyle='#253040';
-      ctx.strokeStyle='#3a4a5a'; ctx.lineWidth=1;
+      ctx.fillStyle='#253040'; ctx.strokeStyle='#3a4a5a'; ctx.lineWidth=1;
       ctx.beginPath(); ctx.roundRect(dx-d.w/2-1,dy,d.w+2,dh,2); ctx.fill(); ctx.stroke();
       ctx.strokeStyle='#445566'; ctx.lineWidth=0.5;
       ctx.beginPath(); ctx.moveTo(dx,dy+5); ctx.lineTo(dx,dy+dh-5); ctx.stroke();
     }
   });
-
-  // Train label
   ctx.fillStyle='#445'; ctx.font='bold 11px monospace'; ctx.textAlign='left';
-  ctx.fillText('RATP · Ligne 13', tx+14, ty+trainH-8);
+  ctx.fillText('RATP · Ligne 13',tx+14,ty+trainH-8);
 }
 
 function drawPlayer() {
   const px=player.x, py=player.y;
-
-  // Shadow
-  ctx.fillStyle='rgba(0,0,0,0.22)';
-  ctx.beginPath(); ctx.ellipse(px,py+15,11,4,0,0,Math.PI*2); ctx.fill();
-
-  // Legs
-  ctx.fillStyle='#2e2e50';
-  ctx.fillRect(px-7,py+1,6,15); ctx.fillRect(px+1,py+1,6,15);
-  // Shoes
-  ctx.fillStyle='#1a1a30';
-  ctx.fillRect(px-8,py+14,8,5); ctx.fillRect(px,py+14,8,5);
-
-  // Coat body
-  ctx.fillStyle='#4a3a7a';
-  ctx.beginPath(); ctx.roundRect(px-10,py-14,20,18,4); ctx.fill();
-
-  // Head
-  ctx.fillStyle='#c8875e';
-  ctx.beginPath(); ctx.arc(px,py-20,9,0,Math.PI*2); ctx.fill();
-
-  // Sunglasses
+  ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.beginPath(); ctx.ellipse(px,py+15,11,4,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#2e2e50'; ctx.fillRect(px-7,py+1,6,15); ctx.fillRect(px+1,py+1,6,15);
+  ctx.fillStyle='#1a1a30'; ctx.fillRect(px-8,py+14,8,5); ctx.fillRect(px,py+14,8,5);
+  ctx.fillStyle='#4a3a7a'; ctx.beginPath(); ctx.roundRect(px-10,py-14,20,18,4); ctx.fill();
+  ctx.fillStyle='#c8875e'; ctx.beginPath(); ctx.arc(px,py-20,9,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='#111';
   ctx.beginPath(); ctx.roundRect(px-9,py-24,7,5,2); ctx.fill();
   ctx.beginPath(); ctx.roundRect(px+2,py-24,7,5,2); ctx.fill();
   ctx.strokeStyle='#333'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(px-2,py-21); ctx.lineTo(px+2,py-21); ctx.stroke();
-
-  // White cane — sweeping motion
-  const swing = Math.sin(tick * 0.14) * 26;
+  const swing=Math.sin(tick*0.14)*26;
   const cx0=px+5, cy0=py+3;
   const cxE=cx0+Math.sin(swing*Math.PI/180)*58;
   const cyE=cy0+Math.cos(swing*Math.PI/180)*58;
-
   ctx.strokeStyle='#ffffff'; ctx.lineWidth=3; ctx.lineCap='round';
   ctx.beginPath(); ctx.moveTo(cx0,cy0); ctx.lineTo(cxE,cyE); ctx.stroke();
-
-  // Red cane tip
-  ctx.fillStyle='#ff2222';
-  ctx.beginPath(); ctx.arc(cxE,cyE,4.5,0,Math.PI*2); ctx.fill();
-
-  // Subtle cane scan glow
-  ctx.fillStyle='rgba(255,255,255,0.1)';
-  ctx.beginPath(); ctx.arc(cxE,cyE,11,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#ff2222'; ctx.beginPath(); ctx.arc(cxE,cyE,4.5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.1)'; ctx.beginPath(); ctx.arc(cxE,cyE,11,0,Math.PI*2); ctx.fill();
 }
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
+// ── HELPERS ──────────────────────────────────────────────────────────────────
 function isInWaitZone() {
   return player.x>waitZone.x && player.x<waitZone.x+waitZone.w &&
          player.y>waitZone.y && player.y<waitZone.y+waitZone.h;
 }
-
 function nearestDoorDist() {
-  if(!trainArrived || !doorsOpen) return 9999;
+  if(!trainArrived||!doorsOpen) return 9999;
   let min=9999;
-  doors.forEach(d => {
-    const dx = trainX + d.rel*trainW;
-    const dy = trainTopY + trainH; // door bottom = platform level
-    const dist = Math.hypot(player.x-dx, player.y-dy);
+  doors.forEach(d=>{
+    const dx=trainX+d.rel*trainW, dy=trainTopY+trainH;
+    const dist=Math.hypot(player.x-dx,player.y-dy);
     if(dist<min) min=dist;
   });
   return min;
 }
-
 function isInsideTrain() {
-  if(!trainArrived || !doorsOpen) return false;
-  // Allow entry only through open door areas
-  let nearDoor = false;
-  doors.forEach(d => {
-    const dx = trainX + d.rel*trainW;
-    if(Math.abs(player.x - dx) < d.w/2 + 10) nearDoor = true;
-  });
-  return nearDoor && player.y < trainTopY + trainH - 5 && player.x > trainX && player.x < trainX+trainW;
+  if(!trainArrived||!doorsOpen) return false;
+  let nearDoor=false;
+  doors.forEach(d=>{ const dx=trainX+d.rel*trainW; if(Math.abs(player.x-dx)<d.w/2+10) nearDoor=true; });
+  return nearDoor && player.y<trainTopY+trainH-5 && player.x>trainX && player.x<trainX+trainW;
 }
-
-function setVibLevel(level) {
-  if(level === vibLevel) return;
-  vibLevel = level;
-  const vib = document.getElementById('vibration');
-  const phone = document.getElementById('phone');
-  phone.className = '';
-  vib.style.display = level > 0 ? 'flex' : 'none';
-  if(level>0) phone.className = 'vib-'+level;
-  broadcastVib(level);
-}
-
-function updateStatus(msg) {
-  document.getElementById('status').textContent = msg;
-}
-
 function showAnnouncement() {
-  const ann = document.getElementById('announcement');
-  ann.style.display = 'block';
-  setTimeout(() => {
-    ann.style.display = 'none';
-    document.getElementById('success').style.display = 'flex';
-    state = 'success';
-  }, 5000);
+  document.getElementById('announcement').style.display='block';
+  setTimeout(()=>{
+    document.getElementById('announcement').style.display='none';
+    document.getElementById('success').style.display='flex';
+    state='success';
+  },5000);
 }
 
-// ─── GAME LOOP ────────────────────────────────────────────────────────────────
-const keys = {};
-document.addEventListener('keydown', e => { keys[e.key]=true; e.preventDefault(); });
-document.addEventListener('keyup',   e => { keys[e.key]=false; });
+// ── KEYS ─────────────────────────────────────────────────────────────────────
+const keys={};
+document.addEventListener('keydown',e=>{keys[e.key]=true;e.preventDefault();});
+document.addEventListener('keyup',  e=>{keys[e.key]=false;});
 
+// ── GAME LOOP ─────────────────────────────────────────────────────────────────
 function gameLoop() {
   tick++;
-  if(state !== 'playing' && state !== 'boarding') { requestAnimationFrame(gameLoop); return; }
+  if(state!=='playing'&&state!=='boarding'){requestAnimationFrame(gameLoop);return;}
+  if(keys['ArrowLeft'])  player.x-=player.speed;
+  if(keys['ArrowRight']) player.x+=player.speed;
+  if(keys['ArrowUp'])    player.y-=player.speed;
+  if(keys['ArrowDown'])  player.y+=player.speed;
+  player.x=Math.max(platformLeft+12,Math.min(platformRight-12,player.x));
+  player.y=Math.max(platformTop+8,  Math.min(platformBottom-10,player.y));
 
-  // Player movement
-  if(keys['ArrowLeft'])  player.x -= player.speed;
-  if(keys['ArrowRight']) player.x += player.speed;
-  if(keys['ArrowUp'])    player.y -= player.speed;
-  if(keys['ArrowDown'])  player.y += player.speed;
-
-  // Clamp to platform
-  player.x = Math.max(platformLeft+12, Math.min(platformRight-12, player.x));
-  player.y = Math.max(platformTop+8,   Math.min(platformBottom-10, player.y));
-
-  // Train arrival (after 3 seconds)
   trainArrivedTimer++;
-  if(!trainArrived) {
-    if(trainArrivedTimer > 200) {
-      trainX = Math.max(platformLeft + 8, trainX - 7);
-      if(trainX <= platformLeft + 8) {
-        trainArrived = true;
-        updateStatus('🚆 Le train est en gare. Attendez l\'ouverture des portes...');
-        setTimeout(() => {
-          doorsOpen = true;
-          updateStatus('🚪 Portes ouvertes — approchez-vous pour monter !');
-        }, 1400);
-      }
+  if(!trainArrived&&trainArrivedTimer>200){
+    trainX=Math.max(platformLeft+8,trainX-7);
+    if(trainX<=platformLeft+8){
+      trainArrived=true;
+      updateStatus('🚆 Le train est en gare. Attendez l\'ouverture des portes...');
+      setTimeout(()=>{ doorsOpen=true; updateStatus('🚪 Portes ouvertes — approchez-vous pour monter !'); },1400);
     }
   }
 
-  // Wait zone feedback
-  const inWZ = isInWaitZone();
-  if(inWZ && !inWaitZoneBefore) updateStatus('✓ Zone podotactile atteinte. Le train arrive bientôt...');
-  if(!inWZ && inWaitZoneBefore && !trainArrived) updateStatus('Retrouvez la zone d\'attente podotactile...');
-  inWaitZoneBefore = inWZ;
+  const inWZ=isInWaitZone();
+  if(inWZ&&!inWaitZoneBefore) updateStatus('✓ Zone podotactile atteinte. Le train arrive bientôt...');
+  if(!inWZ&&inWaitZoneBefore&&!trainArrived) updateStatus("Retrouvez la zone d'attente podotactile...");
+  inWaitZoneBefore=inWZ;
 
-  // Vibration proximity (3 levels based on distance)
-  if(doorsOpen && state === 'playing') {
-    const dist = nearestDoorDist();
-    if(dist < 60) {
-      setVibLevel(3);
-      updateStatus('📳📳📳 Porte à portée — entrez dans le wagon !');
-    } else if(dist < 110) {
-      setVibLevel(2);
-      updateStatus('📳📳 Porte détectée — continuez à avancer...');
-    } else if(dist < 180) {
-      setVibLevel(1);
-      updateStatus('📳 Signal faible — une porte est proche...');
-    } else {
-      setVibLevel(0);
-    }
-  } else if(!doorsOpen) {
-    setVibLevel(0);
-  }
+  if(doorsOpen&&state==='playing'){
+    const dist=nearestDoorDist();
+    if(dist<60){      setVibLevel(3); updateStatus('📳📳📳 Porte à portée — entrez dans le wagon !'); }
+    else if(dist<110){ setVibLevel(2); updateStatus('📳📳 Porte détectée — continuez...'); }
+    else if(dist<180){ setVibLevel(1); updateStatus('📳 Signal faible — une porte est proche...'); }
+    else {             setVibLevel(0); }
+  } else if(!doorsOpen){ setVibLevel(0); }
 
-  // Boarding
-  if(isInsideTrain() && state==='playing' && !announceShown) {
-    announceShown = true;
-    state = 'boarding';
-    setVibLevel(0);
+  if(isInsideTrain()&&state==='playing'&&!announceShown){
+    announceShown=true; state='boarding';
+    setVibLevel(0); supabaseUpdate(0);
     updateStatus('🎙 Annonce vocale en cours...');
-    broadcastVib(0);
     showAnnouncement();
   }
 
-  // ─── DRAW ─────────────────────────────────────────────────────────────────
   ctx.clearRect(0,0,W,H);
-  drawBg();
-  drawPlatform();
-  drawTrain();
+  drawBg(); drawPlatform(); drawTrain();
 
-  // Glow on wait zone when player is near
-  const wDist = Math.hypot(player.x-(waitZone.x+waitZone.w/2), player.y-(waitZone.y+waitZone.h/2));
-  if(wDist < 100) {
-    ctx.strokeStyle=`rgba(255,215,0,${0.6*(1-wDist/100)})`;
-    ctx.lineWidth=3;
-    ctx.strokeRect(waitZone.x-3,waitZone.y-3,waitZone.w+6,waitZone.h+6);
-  }
+  const wDist=Math.hypot(player.x-(waitZone.x+waitZone.w/2),player.y-(waitZone.y+waitZone.h/2));
+  if(wDist<100){ ctx.strokeStyle=`rgba(255,215,0,${0.6*(1-wDist/100)})`; ctx.lineWidth=3; ctx.strokeRect(waitZone.x-3,waitZone.y-3,waitZone.w+6,waitZone.h+6); }
 
   drawPlayer();
 
-  // Distance indicator to nearest door (when doors open)
-  if(doorsOpen && state==='playing') {
-    const dist = nearestDoorDist();
-    if(dist < 200) {
-      const pct = 1 - dist/200;
-      ctx.strokeStyle=`rgba(74,158,255,${pct*0.7})`;
-      ctx.lineWidth=2;
-      // Find nearest door
-      let nearD = null, nearDist2 = 9999;
-      doors.forEach(d => {
-        const ddx = trainX+d.rel*trainW;
-        const ddy = trainTopY+trainH;
-        const dd = Math.hypot(player.x-ddx,player.y-ddy);
-        if(dd<nearDist2){ nearDist2=dd; nearD={x:ddx,y:ddy}; }
-      });
-      if(nearD) {
-        ctx.setLineDash([6,4]);
-        ctx.beginPath(); ctx.moveTo(player.x,player.y-20); ctx.lineTo(nearD.x,nearD.y); ctx.stroke();
-        ctx.setLineDash([]);
-      }
+  if(doorsOpen&&state==='playing'){
+    const dist=nearestDoorDist();
+    if(dist<200){
+      let nearD=null, nearDist2=9999;
+      doors.forEach(d=>{ const ddx=trainX+d.rel*trainW,ddy=trainTopY+trainH,dd=Math.hypot(player.x-ddx,player.y-ddy); if(dd<nearDist2){nearDist2=dd;nearD={x:ddx,y:ddy};} });
+      if(nearD){ ctx.setLineDash([6,4]); ctx.strokeStyle=`rgba(74,158,255,${(1-dist/200)*0.6})`; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(player.x,player.y-20); ctx.lineTo(nearD.x,nearD.y); ctx.stroke(); ctx.setLineDash([]); }
     }
   }
-
   requestAnimationFrame(gameLoop);
 }
 
-// ─── EVENTS ───────────────────────────────────────────────────────────────────
-document.getElementById('startBtn').addEventListener('click', () => {
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.getElementById('startBtn').addEventListener('click',()=>{
   document.getElementById('intro').style.display='none';
   state='playing';
   updateStatus("Utilisez les flèches — trouvez la zone d'attente podotactile !");
 });
-
-document.getElementById('restartBtn').addEventListener('click', () => {
+document.getElementById('restartBtn').addEventListener('click',()=>{
   document.getElementById('success').style.display='none';
   player.x=W*0.72; player.y=H*0.70;
   trainX=W+300; trainArrived=false; trainArrivedTimer=0; doorsOpen=false;
   vibLevel=-1; announceShown=false; inWaitZoneBefore=false;
-  state='playing';
-  setVibLevel(0);
+  state='playing'; setVibLevel(0);
   document.getElementById('announcement').style.display='none';
   updateStatus("Trouvez la zone d'attente podotactile !");
 });
 
-// Generate QR
-window.addEventListener('load', () => { setTimeout(generateQR, 400); });
+window.addEventListener('load',()=>{ setTimeout(generateQR,400); });
 requestAnimationFrame(gameLoop);
 </script>
 </body>
