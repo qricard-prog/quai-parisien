@@ -3,281 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Quai Parisien — Vibration Mobile</title>
+<title>Quai Parisien — Vibration</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-:root {
-  --bg: #0e0e1a;
-  --card: #1a1a2e;
-  --blue: #4a9eff;
-  --orange: #FF6B35;
-  --green: #4aff88;
-  --text: #e0e0f0;
-  --muted: #707090;
-}
-
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Courier New', monospace;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
+  background:#0e0e1a; color:#e0e0f0;
+  font-family:'Courier New',monospace;
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:24px; text-align:center;
 }
+h1 { font-size:20px; color:#4a9eff; margin-bottom:6px; letter-spacing:1px; }
+.subtitle { font-size:12px; color:#707090; margin-bottom:24px; line-height:1.6; }
 
-h1 {
-  font-size: 20px;
-  color: var(--blue);
-  margin-bottom: 6px;
-  letter-spacing: 1px;
+/* Connection badge */
+#conn-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 12px; border-radius:20px; font-size:11px;
+  background:#1a1a2a; border:1px solid #333;
+  color:#707090; margin-bottom:22px;
+  transition: all 0.4s;
 }
+#conn-badge span { width:8px; height:8px; border-radius:50%; background:#555; display:inline-block; transition:background 0.3s; }
+#conn-badge.connected { color:#4aff88; border-color:#2a4a2a; background:#0e1e0e; }
+#conn-badge.connected span { background:#4aff88; box-shadow:0 0 8px #4aff88; }
+#conn-badge.error { color:#ff6666; border-color:#4a2a2a; background:#1e0e0e; }
+#conn-badge.error span { background:#ff4444; }
 
-.subtitle {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 28px;
-  line-height: 1.6;
-}
+/* Phone */
+.phone-wrap { position:relative; margin-bottom:28px; }
+.rings { position:absolute; inset:-40px; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+.ring { position:absolute; border:2px solid #FF6B35; border-radius:50%; opacity:0; }
+.ring-1 { width:130px; height:130px; }
+.ring-2 { width:175px; height:175px; }
+.ring-3 { width:220px; height:220px; }
 
-/* Big phone visual */
-.phone-wrap {
-  position: relative;
-  margin-bottom: 28px;
-}
+@keyframes ring-expand { 0%{opacity:0.9;transform:scale(0.35)} 100%{opacity:0;transform:scale(1)} }
+@keyframes vib-light  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+@keyframes vib-medium { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px) rotate(-2deg)} 50%{transform:translateX(7px) rotate(2deg)} 80%{transform:translateX(-5px)} }
+@keyframes vib-strong { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-9px) rotate(-3deg)} 35%{transform:translateX(9px) rotate(3deg)} 55%{transform:translateX(-8px) rotate(-2deg)} 75%{transform:translateX(9px) rotate(2.5deg)} }
 
 .phone {
-  width: 90px;
-  height: 160px;
-  background: #111;
-  border: 3px solid #333;
-  border-radius: 18px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  transition: border-color 0.3s;
+  width:90px; height:160px; background:#111;
+  border:3px solid #333; border-radius:18px;
+  margin:0 auto; display:flex; align-items:center; justify-content:center;
+  position:relative; transition:border-color 0.3s;
 }
-
-.phone::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  width: 28px; height: 5px;
-  background: #222;
-  border-radius: 3px;
-}
-
-.phone::after {
-  content: '';
-  position: absolute;
-  bottom: 10px;
-  width: 36px; height: 5px;
-  background: #222;
-  border-radius: 3px;
-}
-
+.phone::before { content:''; position:absolute; top:10px; width:28px; height:5px; background:#222; border-radius:3px; }
+.phone::after  { content:''; position:absolute; bottom:10px; width:36px; height:5px; background:#222; border-radius:3px; }
 .phone-screen {
-  width: 72px; height: 120px;
-  background: #0a0a18;
-  border-radius: 10px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 6px;
-  overflow: hidden;
-  position: relative;
+  width:72px; height:120px; background:#0a0a18;
+  border-radius:10px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:6px; overflow:hidden;
 }
+.phone-icon { font-size:30px; }
+.phone-text { font-size:10px; color:#606080; }
 
-.phone-icon { font-size: 28px; }
-.phone-text { font-size: 10px; color: var(--muted); }
+/* Level states */
+.level-0 .phone { border-color:#333; }
+.level-1 .phone { border-color:#FF6B35; animation:vib-light  0.22s infinite; }
+.level-2 .phone { border-color:#ff9900; animation:vib-medium 0.16s infinite; }
+.level-3 .phone { border-color:#ff3333; animation:vib-strong 0.10s infinite; }
 
-/* Signal rings */
-.rings {
-  position: absolute;
-  inset: -30px;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-}
+.level-1 .ring-1 { animation:ring-expand 0.9s infinite; }
+.level-2 .ring-1 { animation:ring-expand 0.55s infinite; }
+.level-2 .ring-2 { animation:ring-expand 0.55s 0.18s infinite; }
+.level-3 .ring-1 { animation:ring-expand 0.38s infinite; }
+.level-3 .ring-2 { animation:ring-expand 0.38s 0.13s infinite; }
+.level-3 .ring-3 { animation:ring-expand 0.38s 0.26s infinite; }
 
-.ring {
-  position: absolute;
-  border: 2px solid var(--blue);
-  border-radius: 50%;
-  opacity: 0;
+/* Status */
+.status-card {
+  width:100%; max-width:320px; background:#1a1a2e;
+  border-radius:10px; padding:14px 18px; margin-bottom:18px;
+  border:1px solid #2a2a40;
 }
-.ring-1 { width: 120px; height: 120px; }
-.ring-2 { width: 160px; height: 160px; }
-.ring-3 { width: 200px; height: 200px; }
+.status-label { font-size:10px; color:#505070; margin-bottom:8px; letter-spacing:1px; text-transform:uppercase; }
+#status-msg { font-size:14px; color:#e0e0f0; line-height:1.5; min-height:42px; }
 
-@keyframes ring-expand {
-  0% { opacity: 0.8; transform: scale(0.4); }
-  100% { opacity: 0; transform: scale(1); }
-}
-
-/* Vibration animations */
-@keyframes vib-light  {
-  0%,100%{transform:translateX(0) rotate(0)}
-  25%{transform:translateX(-4px) rotate(-1deg)}
-  75%{transform:translateX(4px) rotate(1deg)}
-}
-@keyframes vib-medium {
-  0%,100%{transform:translateX(0) rotate(0)}
-  20%{transform:translateX(-6px) rotate(-2deg)}
-  50%{transform:translateX(7px) rotate(2.5deg)}
-  80%{transform:translateX(-5px) rotate(-1.5deg)}
-}
-@keyframes vib-strong {
-  0%,100%{transform:translateX(0) rotate(0)}
-  15%{transform:translateX(-9px) rotate(-3deg)}
-  35%{transform:translateX(9px) rotate(3deg)}
-  55%{transform:translateX(-7px) rotate(-2deg)}
-  75%{transform:translateX(8px) rotate(2.5deg)}
-}
-
-.level-0 .phone { border-color: #333; }
-.level-1 .phone { border-color: #FF6B35; animation: vib-light  0.22s infinite; }
-.level-2 .phone { border-color: #ff9900; animation: vib-medium 0.16s infinite; }
-.level-3 .phone { border-color: #ff3333; animation: vib-strong 0.10s infinite; }
-
-.level-1 .ring-1 { animation: ring-expand 0.9s infinite; }
-.level-2 .ring-1 { animation: ring-expand 0.6s infinite; }
-.level-2 .ring-2 { animation: ring-expand 0.6s 0.2s infinite; }
-.level-3 .ring-1 { animation: ring-expand 0.4s infinite; }
-.level-3 .ring-2 { animation: ring-expand 0.4s 0.13s infinite; }
-.level-3 .ring-3 { animation: ring-expand 0.4s 0.26s infinite; }
-
-.level-1 .ring-1,
-.level-2 .ring-1,.level-2 .ring-2,
-.level-3 .ring-1,.level-3 .ring-2,.level-3 .ring-3 {
-  border-color: var(--orange);
-}
-
-/* Status bar */
-.status-bar {
-  width: 100%;
-  max-width: 320px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin-bottom: 20px;
-  border: 1px solid #2a2a40;
-}
-
-.status-label {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 8px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.status-msg {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.5;
-  min-height: 40px;
-}
-
-/* Intensity bar */
-.intensity-wrap {
-  width: 100%; max-width:320px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin-bottom: 22px;
-  border: 1px solid #2a2a40;
-}
-
-.int-label { font-size:11px; color:var(--muted); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase; }
-.int-bar {
-  width: 100%; height: 14px;
-  background: #0a0a18;
-  border-radius: 7px;
-  overflow: hidden;
-  position: relative;
-}
-.int-fill {
-  height: 100%;
-  border-radius: 7px;
-  width: 0%;
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.int-dots {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.int-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: #2a2a3e;
-  transition: background 0.2s, transform 0.2s;
-}
+/* Intensity */
+.int-card { width:100%; max-width:320px; background:#1a1a2e; border-radius:10px; padding:14px 18px; margin-bottom:20px; border:1px solid #2a2a40; }
+.int-label { font-size:10px; color:#505070; margin-bottom:10px; letter-spacing:1px; text-transform:uppercase; }
+.int-bar { width:100%; height:14px; background:#080812; border-radius:7px; overflow:hidden; }
+.int-fill { height:100%; border-radius:7px; width:0%; transition:width 0.25s ease, background 0.25s ease; }
+.int-dots { display:flex; justify-content:space-between; margin-top:8px; }
+.int-dot { width:10px; height:10px; border-radius:50%; background:#1e1e30; transition:background 0.2s, transform 0.2s; }
 
 /* Activate button */
 #activateBtn {
-  width: 100%; max-width: 320px;
-  padding: 16px;
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-family: 'Courier New', monospace;
-  cursor: pointer;
-  margin-bottom: 12px;
-  transition: background 0.2s, transform 0.1s;
-  letter-spacing: 0.5px;
+  width:100%; max-width:320px; padding:16px;
+  background:#4a9eff; color:#fff; border:none;
+  border-radius:12px; font-size:16px; font-family:'Courier New',monospace;
+  cursor:pointer; margin-bottom:12px; transition:background 0.2s, transform 0.1s;
 }
-#activateBtn:active { transform: scale(0.97); }
-#activateBtn.active { background: #ff4444; }
-
-.note {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 280px;
-}
-
-.badge {
-  display: inline-block;
-  background: #1e2e1e;
-  color: var(--green);
-  border: 1px solid #2a4a2a;
-  font-size: 10px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-}
-
-/* Not supported warning */
-#not-supported {
-  display: none;
-  background: #2e1a1a;
-  border: 1px solid #5a2a2a;
-  border-radius: 10px;
-  padding: 14px 18px;
-  color: #ff8888;
-  font-size: 13px;
-  margin-bottom: 16px;
-  max-width: 320px;
-  line-height: 1.6;
-}
+#activateBtn:active { transform:scale(0.97); }
+#activateBtn.active { background:#ff4444; }
+.note { font-size:11px; color:#505070; line-height:1.7; max-width:280px; }
 </style>
 </head>
 <body>
 
 <h1>🦯 Quai Parisien</h1>
-<p class="subtitle">Expérience de vibration mobile<br>Synchronisée avec le jeu sur écran</p>
+<p class="subtitle">Vibration temps réel<br>synchronisée avec le jeu</p>
 
-<div class="badge">● EN ATTENTE DU JEU</div>
+<div id="conn-badge"><span></span> <span id="conn-text">Connexion...</span></div>
 
 <div class="phone-wrap" id="phoneWrap">
   <div class="rings">
@@ -293,59 +122,41 @@ h1 {
   </div>
 </div>
 
-<div id="not-supported">
-  ⚠️ Vibration non supportée sur cet appareil.<br>
-  Utilisez Chrome sur Android pour ressentir les vibrations.
-</div>
-
-<div class="status-bar">
+<div class="status-card">
   <div class="status-label">État</div>
-  <div class="status-msg" id="statusMsg">Connecté au jeu. Attendez que le joueur approche d'une porte du train.</div>
+  <div id="status-msg">Connecté à Supabase. En attente du signal du jeu...</div>
 </div>
 
-<div class="intensity-wrap">
-  <div class="int-label">Intensité vibration</div>
-  <div class="int-bar">
-    <div class="int-fill" id="intFill"></div>
-  </div>
-  <div class="int-dots">
-    <div class="int-dot" id="d0"></div>
-    <div class="int-dot" id="d1"></div>
-    <div class="int-dot" id="d2"></div>
-    <div class="int-dot" id="d3"></div>
-    <div class="int-dot" id="d4"></div>
-    <div class="int-dot" id="d5"></div>
-    <div class="int-dot" id="d6"></div>
-    <div class="int-dot" id="d7"></div>
+<div class="int-card">
+  <div class="int-label">Intensité</div>
+  <div class="int-bar"><div class="int-fill" id="intFill"></div></div>
+  <div class="int-dots" id="intDots">
+    <div class="int-dot"></div><div class="int-dot"></div>
+    <div class="int-dot"></div><div class="int-dot"></div>
+    <div class="int-dot"></div><div class="int-dot"></div>
+    <div class="int-dot"></div><div class="int-dot"></div>
   </div>
 </div>
 
 <button id="activateBtn">📳 Activer les vibrations</button>
-<p class="note">Sur Android Chrome, appuyez d'abord sur "Activer" pour débloquer les vibrations (requis par le navigateur).</p>
+<p class="note">Appuyez d'abord sur Activer (requis par Android Chrome).</p>
 
 <script>
+// ── SUPABASE CONFIG ──────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://naypxosgtdhqhgatvsaz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Oe-bv2X-wRCvg_AHWbUqlg_fdBAH5R3';
+
 const vibSupported = 'vibrate' in navigator;
 let vibEnabled = false;
 let currentLevel = 0;
-let vibInterval = null;
+let vibInterval  = null;
 
-if(!vibSupported) {
-  document.getElementById('not-supported').style.display = 'block';
-}
-
-// ─── UI HELPERS ────────────────────────────────────────────────────────────────
-const phoneWrap = document.getElementById('phoneWrap');
-const intFill   = document.getElementById('intFill');
-const statusMsg = document.getElementById('statusMsg');
-const phoneIcon = document.getElementById('phoneIcon');
-const phoneText = document.getElementById('phoneText');
-const badge     = document.querySelector('.badge');
-
+// ── LEVEL CONFIG ─────────────────────────────────────────────────────────────
 const LEVELS = {
-  0: { label:'Aucun signal', icon:'🚆', text:'Loin de la porte', fill:'0%', color:'#2a2a3e', msg:'En attente — le joueur n\'est pas encore près d\'une porte.' },
-  1: { label:'Signal faible', icon:'📳', text:'Proche...', fill:'33%', color:'#FF6B35', msg:'Signal faible 〰 Une porte est détectée au loin.' },
-  2: { label:'Signal moyen', icon:'📳', text:'Très proche !', fill:'66%', color:'#ff9900', msg:'Signal fort ⚡ Le joueur s\'approche de la porte !' },
-  3: { label:'Porte à portée !', icon:'🚪', text:'Entrez !', fill:'100%', color:'#ff3333', msg:'🚪 PORTE À PORTÉE — Entrez dans le wagon !' }
+  0: { icon:'🚆', text:'Loin de la porte', fill:'0%',   color:'#1e1e30', msg:'En attente — le joueur n\'est pas encore près d\'une porte.' },
+  1: { icon:'📳', text:'Proche...',         fill:'33%',  color:'#FF6B35', msg:'Signal faible 〰 Une porte est détectée au loin.' },
+  2: { icon:'📳', text:'Très proche !',     fill:'66%',  color:'#ff9900', msg:'Signal fort ⚡ Le joueur s\'approche de la porte !' },
+  3: { icon:'🚪', text:'Entrez !',          fill:'100%', color:'#ff3333', msg:'🚪 PORTE À PORTÉE — Entrez dans le wagon !' }
 };
 
 function applyLevel(level) {
@@ -353,58 +164,36 @@ function applyLevel(level) {
   currentLevel = level;
   const cfg = LEVELS[level];
 
-  // Phone animation class
-  phoneWrap.className = 'phone-wrap level-' + level;
+  document.getElementById('phoneWrap').className = 'phone-wrap level-' + level;
+  document.getElementById('intFill').style.width      = cfg.fill;
+  document.getElementById('intFill').style.background = level===0 ? '#1e1e30' : `linear-gradient(90deg,#FF6B35,${cfg.color})`;
+  document.getElementById('status-msg').textContent   = cfg.msg;
+  document.getElementById('phoneIcon').textContent    = cfg.icon;
+  document.getElementById('phoneText').textContent    = cfg.text;
 
-  // Bar
-  intFill.style.width  = cfg.fill;
-  intFill.style.background = level===0 ? '#2a2a3e' :
-    `linear-gradient(90deg, #FF6B35, ${cfg.color})`;
-
-  // Dots
   const active = Math.ceil(level * 8/3);
-  for(let i=0;i<8;i++){
-    const d = document.getElementById('d'+i);
-    d.style.background = i < active ? cfg.color : '#2a2a3e';
-    d.style.transform  = i < active ? 'scale(1.3)' : 'scale(1)';
-  }
+  document.querySelectorAll('.int-dot').forEach((d,i)=>{
+    d.style.background = i<active ? cfg.color : '#1e1e30';
+    d.style.transform  = i<active ? 'scale(1.3)' : 'scale(1)';
+  });
 
-  // Text
-  statusMsg.textContent = cfg.msg;
-  phoneIcon.textContent = cfg.icon;
-  phoneText.textContent = cfg.text;
-
-  // Badge
-  if(level===0) {
-    badge.style.background='#1e2e1e'; badge.style.color='#4aff88';
-    badge.style.borderColor='#2a4a2a'; badge.textContent='● EN ATTENTE';
-  } else {
-    badge.style.background='#2e1e0a'; badge.style.color='#FF6B35';
-    badge.style.borderColor='#4a3010'; badge.textContent='● SIGNAL ACTIF';
-  }
-
-  // Haptic vibration
-  if(vibEnabled && vibSupported && navigator.vibrate) {
+  // Haptic
+  if(vibEnabled && vibSupported) {
     clearInterval(vibInterval);
-    if(level===1) {
-      vibInterval = setInterval(() => navigator.vibrate([80,120]), 200);
-    } else if(level===2) {
-      vibInterval = setInterval(() => navigator.vibrate([150,80]), 230);
-    } else if(level===3) {
-      vibInterval = setInterval(() => navigator.vibrate([250,50,150,50]), 500);
-    } else {
-      navigator.vibrate(0);
-    }
+    if(level===1)      vibInterval = setInterval(()=>navigator.vibrate([80,140]),220);
+    else if(level===2) vibInterval = setInterval(()=>navigator.vibrate([160,80]),240);
+    else if(level===3) vibInterval = setInterval(()=>navigator.vibrate([280,50,160,50]),500);
+    else { navigator.vibrate(0); }
   }
 }
 
-// ─── ACTIVATE BUTTON ──────────────────────────────────────────────────────────
-document.getElementById('activateBtn').addEventListener('click', function() {
-  if(!vibEnabled) {
+// ── ACTIVATE BUTTON ───────────────────────────────────────────────────────────
+document.getElementById('activateBtn').addEventListener('click', function(){
+  if(!vibEnabled){
     vibEnabled = true;
-    this.textContent = '⏹ Désactiver les vibrations';
+    this.textContent = '⏹ Désactiver';
     this.classList.add('active');
-    if(vibSupported) navigator.vibrate([100,50,100]); // test pulse
+    if(vibSupported) navigator.vibrate([100,50,100,50,200]);
   } else {
     vibEnabled = false;
     this.textContent = '📳 Activer les vibrations';
@@ -414,46 +203,96 @@ document.getElementById('activateBtn').addEventListener('click', function() {
   }
 });
 
-// ─── SYNC FROM GAME (localStorage polling) ────────────────────────────────────
-let lastTimestamp = 0;
+// ── SUPABASE REALTIME ─────────────────────────────────────────────────────────
+// Use Supabase REST polling (100ms) + Realtime WebSocket for instant updates
+const connBadge = document.getElementById('conn-badge');
+const connText  = document.getElementById('conn-text');
 
-function poll() {
-  try {
-    const raw = localStorage.getItem('quai_vib');
-    if(raw) {
-      const data = JSON.parse(raw);
-      if(data.t !== lastTimestamp) {
-        lastTimestamp = data.t;
-        applyLevel(data.level || 0);
-      }
-    }
-  } catch(e) {}
+function setConnected(ok) {
+  connBadge.className = ok ? 'connected' : 'error';
+  connText.textContent = ok ? 'Connecté en temps réel' : 'Erreur de connexion';
 }
 
-// Poll every 100ms for low-latency response
-setInterval(poll, 100);
+// ── Realtime via WebSocket (Supabase Realtime protocol) ───────────────────────
+function connectRealtime() {
+  const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0';
+  const ws = new WebSocket(wsUrl);
 
-// ─── DEMO MODE (if no game is detected after 3s, show demo) ──────────────────
-setTimeout(() => {
-  try {
-    const raw = localStorage.getItem('quai_vib');
-    if(!raw) {
-      // No game signal — show demo loop
-      let demoLevel = 0;
-      const demoSeq = [0,0,0,1,1,2,2,3,3,2,1,0,0];
-      let demoIdx = 0;
-      statusMsg.textContent = 'Mode démo — aucun jeu détecté. Les niveaux se succèdent automatiquement.';
-      const demoInterval = setInterval(() => {
-        applyLevel(demoSeq[demoIdx % demoSeq.length]);
-        demoIdx++;
-        // Stop demo once game signal is received
-        try {
-          if(localStorage.getItem('quai_vib')) clearInterval(demoInterval);
-        } catch(e){}
-      }, 1200);
+  ws.onopen = () => {
+    setConnected(true);
+    // Join channel for postgres changes on vib_state
+    ws.send(JSON.stringify({
+      topic: 'realtime:public:vib_state',
+      event: 'phx_join',
+      payload: {
+        config: {
+          broadcast: { self: false },
+          presence:  { key: '' },
+          postgres_changes: [{ event:'UPDATE', schema:'public', table:'vib_state' }]
+        }
+      },
+      ref: '1'
+    }));
+  };
+
+  ws.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      // Heartbeat reply
+      if(msg.event === 'phx_reply' && msg.payload?.status === 'ok') return;
+      // Postgres change event
+      if(msg.event === 'postgres_changes' || (msg.payload?.data?.type === 'UPDATE')) {
+        const record = msg.payload?.data?.record || msg.payload?.record;
+        if(record && typeof record.level !== 'undefined') {
+          applyLevel(parseInt(record.level));
+        }
+      }
+      // Heartbeat keep-alive
+      if(msg.event === 'heartbeat') {
+        ws.send(JSON.stringify({ topic:'phoenix', event:'heartbeat', payload:{}, ref:'hb' }));
+      }
+    } catch(err) {}
+  };
+
+  ws.onerror = () => setConnected(false);
+  ws.onclose = () => {
+    setConnected(false);
+    // Reconnect after 2s
+    setTimeout(connectRealtime, 2000);
+  };
+
+  // Send heartbeat every 30s
+  setInterval(() => {
+    if(ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ topic:'phoenix', event:'heartbeat', payload:{}, ref:'hb' }));
     }
-  } catch(e) {}
-}, 3000);
+  }, 30000);
+}
+
+// ── Fallback: REST polling every 300ms ────────────────────────────────────────
+let lastPollLevel = -1;
+async function poll() {
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/vib_state?id=eq.1&select=level`, {
+      headers:{ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}` }
+    });
+    if(r.ok){
+      const data = await r.json();
+      if(data[0] && data[0].level !== lastPollLevel){
+        lastPollLevel = data[0].level;
+        applyLevel(data[0].level);
+        setConnected(true);
+      }
+    }
+  } catch(e){ setConnected(false); }
+}
+
+// Start both: Realtime WebSocket + REST polling fallback
+connectRealtime();
+setInterval(poll, 300);
+
+// Initial fetch
+poll();
 </script>
 </body>
 </html>
