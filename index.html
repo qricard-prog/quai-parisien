@@ -50,11 +50,51 @@ canvas { display:block; }
 #qr-panel { position:absolute; bottom:70px; right:14px; background:rgba(0,0,0,0.82); border:1px solid #334; border-radius:12px; padding:14px; text-align:center; color:#aaa; font-size:11px; line-height:1.7; width:150px; }
 #qr-panel canvas { border-radius:6px; display:block; margin:0 auto 8px; }
 #qr-panel .qt { color:#4a9eff; font-size:12px; font-weight:bold; margin-bottom:6px; }
-#intro { position:absolute; inset:0; background:rgba(0,0,0,0.93); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:200; text-align:center; padding:30px; }
-#intro h1 { font-size:22px; color:#4a9eff; margin-bottom:14px; }
-#intro p { font-size:13px; color:#ccc; line-height:1.85; max-width:390px; margin-bottom:5px; }
-.key { display:inline-block; background:#2a2a3a; border:1px solid #555; padding:2px 8px; border-radius:4px; font-family:monospace; font-size:12px; }
-#startBtn { margin-top:22px; padding:13px 36px; background:#4a9eff; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; font-family:monospace; }
+#intro {
+  position:absolute; inset:0;
+  background:linear-gradient(160deg,#0a0a18 0%,#0d1a2e 60%,#0a1a14 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#fff; z-index:200; text-align:center; padding:30px; gap:0;
+}
+#intro .intro-logo {
+  display:flex; align-items:center; gap:14px; margin-bottom:28px;
+}
+#intro .intro-logo .ratp-badge {
+  background:#0055A4; color:#fff; font-size:11px; font-weight:bold;
+  padding:5px 12px; border-radius:4px; letter-spacing:1px;
+}
+#intro h1 {
+  font-size:26px; font-weight:bold; color:#fff; margin-bottom:6px;
+  font-family:'Courier New',monospace; letter-spacing:1px;
+}
+#intro .tagline {
+  font-size:13px; color:#00A99D; margin-bottom:32px; letter-spacing:0.5px;
+}
+#intro .qr-block {
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px; padding:24px 32px; margin-bottom:28px;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+}
+#intro .qr-block .qr-instruction {
+  font-size:14px; color:#e0e0e0; font-weight:bold; letter-spacing:0.3px;
+}
+#intro .qr-block canvas { border-radius:10px; }
+#intro .qr-block .qr-sub {
+  font-size:11px; color:#8899aa; line-height:1.6;
+}
+#intro .qr-block .qr-sub span {
+  display:inline-block; background:#00A99D22; color:#00A99D;
+  border:1px solid #00A99D44; padding:2px 8px; border-radius:10px; font-size:10px;
+}
+#startBtn {
+  padding:16px 52px; background:#00A99D; color:#fff; border:none;
+  border-radius:10px; font-size:18px; cursor:pointer;
+  font-family:'Courier New',monospace; font-weight:bold; letter-spacing:1px;
+  transition:background 0.2s, transform 0.1s;
+  box-shadow:0 4px 24px rgba(0,169,157,0.35);
+}
+#startBtn:hover { background:#009988; transform:scale(1.02); }
+#startBtn:active { transform:scale(0.98); }
 #success { position:absolute; inset:0; background:rgba(0,0,0,0.88); display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:300; text-align:center; }
 #success h2 { font-size:24px; color:#4aff88; margin-bottom:10px; }
 #success p { color:#ccc; font-size:14px; margin-bottom:20px; }
@@ -63,18 +103,30 @@ canvas { display:block; }
 </head>
 <body>
 <canvas id="gameCanvas"></canvas>
-<div id="ui">🦯 Simulation — Aveugle sur le quai<br><span class="key">←</span> <span class="key">→</span> Gauche / Droite<br><span class="key">↑</span> <span class="key">↓</span> Avant / Arrière</div>
+
 <div id="status">Attendez le train sur le quai...</div>
 <div id="vibration"><div id="phone">📱</div><div id="vib-rings"><div class="vring"></div><div class="vring"></div><div class="vring"></div></div><div id="vib-label">VIBRATION</div></div>
 <div id="sync-dot"><span></span> mobile sync</div>
 <div id="announcement"><div class="ai">🔊</div><div class="al">Ligne 8</div><div class="ad">Direction Balard</div><div class="am">Les portes sont ouvertes.<br>Bienvenue à bord.<br>Prochain arrêt : Montparnasse.</div></div>
-<div id="qr-panel"><div class="qt">📱 Ressentir</div><canvas id="qrcode" width="122" height="122"></canvas><div style="color:#888;font-size:10px;">Scannez sur Android<br>pour vibrer en live</div></div>
+
 <div id="intro">
-  <h1>🦯 Le Quai Parisien</h1>
-  <p>Simulez l'expérience d'un voyageur non-voyant.<br>Le train arrive — rejoignez une <strong style="color:#FFD700">zone podotactile</strong> devant une porte, puis montez.</p>
-  <p style="margin-top:10px;"><span class="key">←</span> <span class="key">→</span> <span class="key">↑</span> <span class="key">↓</span> Se déplacer</p>
-  <p style="color:#4a9eff;font-size:11px;margin-top:10px;">📱 Scannez le QR code (Android) pour vibrer en temps réel.</p>
-  <button id="startBtn">Commencer</button>
+  <div class="intro-logo">
+    <span class="ratp-badge">RATP</span>
+    <span style="font-size:12px;color:#607080;letter-spacing:1px;">ACCESSIBILITÉ · DÉMONSTRATION</span>
+  </div>
+  <h1>🦯 Quai Parisien</h1>
+  <div class="tagline">Simulation d'aide à la mobilité pour déficients visuels</div>
+
+  <div class="qr-block">
+    <div class="qr-instruction">📱 Scannez pour ressentir les vibrations</div>
+    <canvas id="qrcode" width="180" height="180"></canvas>
+    <div class="qr-sub">
+      Ouvrez la caméra de votre Android et scannez.<br>
+      <span>Vibration temps réel synchronisée</span>
+    </div>
+  </div>
+
+  <button id="startBtn">▶ Lancer la démo</button>
 </div>
 <div id="success"><h2>✅ Vous êtes monté dans le train !</h2><p>Mission accomplie. Bonne route vers Balard.</p><button id="restartBtn">Rejouer</button></div>
 
@@ -131,15 +183,17 @@ const PL=W*0.01;
 const PR=W*0.99;
 
 // Train: full platform width, bottom face at PT (sits against platform edge)
-const TH=H*0.36;
+const TH=H*0.22;
 const TW=W*1.00;   // full screen width — train covers entire platform
-const TY=PT-TH;    // train top Y
+const TY=PT-TH;    // train top Y — sits right on platform edge
 let   TX=W+400;    // starts off-screen right
 // Once arrived, train left edge is at x=0
 const TX_FINAL=0;
 
-// RATP Ligne 8 colors
-const C_SILVER='#CDD1D6', C_BLUE='#0055A4', C_WHITE='#FFFFFF', C_DARK='#1C2B3A', C_ROOF='#A8B0B8';
+// RATP Ligne 8 real livery colors
+const C_SILVER='#CDD1D6', C_BLUE='#0055A4', C_WHITE='#FFFFFF', C_DARK='#1a1a1a', C_ROOF='#2a2a2a';
+const C_TEAL='#00A99D';   // turquoise vert ligne 8
+const C_BODY='#F0F2F0';   // blanc cassé carrosserie
 
 // 3 doors evenly spaced along the full-width train
 const DREL=[0.18,0.50,0.80];
@@ -181,8 +235,8 @@ function generateQR(){
   const qc=document.getElementById('qrcode');
   if(typeof QRCode!=='undefined'){
     const t=document.createElement('div');
-    new QRCode(t,{text:MOBILE_URL,width:112,height:112,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
-    setTimeout(()=>{ const i=t.querySelector('img')||t.querySelector('canvas'); if(i){const c=qc.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,122,122);c.drawImage(i,5,5,112,112);} },300);
+    new QRCode(t,{text:MOBILE_URL,width:170,height:170,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
+    setTimeout(()=>{ const i=t.querySelector('img')||t.querySelector('canvas'); if(i){const c=qc.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,180,180);c.drawImage(i,5,5,170,170);} },300);
   }
 }
 
@@ -267,70 +321,126 @@ function drawZones(){
 // ── DRAW TRAIN ────────────────────────────────────────────────────────────────
 function drawTrain(){
   if(TX>W+250) return;
-  const tx=TX,ty=TY;
+  const tx=TX, ty=TY;
 
-  // === Body ===
-  ctx.fillStyle=C_SILVER; ctx.fillRect(tx,ty,TW,TH);
+  // === Carrosserie blanche ===
+  ctx.fillStyle=C_BODY; ctx.fillRect(tx,ty,TW,TH);
 
-  // Roof (slightly darker)
-  ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,TW,TH*0.14);
+  // === Toit sombre (anthracite) ===
+  ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,TW,TH*0.13);
 
-  // RATP Ligne 8 livery: large blue band top third
-  ctx.fillStyle=C_BLUE; ctx.fillRect(tx,ty+TH*0.14,TW,TH*0.24);
+  // === Bandeau turquoise (haut, sous le toit) ===
+  ctx.fillStyle=C_TEAL; ctx.fillRect(tx,ty+TH*0.13,TW,TH*0.28);
 
-  // White separator line
-  ctx.fillStyle=C_WHITE; ctx.fillRect(tx,ty+TH*0.38,TW,4);
+  // === Filet noir séparateur turquoise / blanc ===
+  ctx.fillStyle='#111'; ctx.fillRect(tx,ty+TH*0.41,TW,3);
 
-  // Lower body light
-  ctx.fillStyle='#E4E8EC'; ctx.fillRect(tx,ty+TH*0.38+4,TW,TH*0.50);
+  // === Bas de caisse légèrement gris ===
+  ctx.fillStyle='#dde0dd'; ctx.fillRect(tx,ty+TH*0.82,TW,TH*0.18);
+  ctx.fillStyle='#bbbebb'; ctx.fillRect(tx,ty+TH*0.90,TW,TH*0.10);
 
-  // Skirt bottom
-  ctx.fillStyle='#9aa2aa'; ctx.fillRect(tx,ty+TH*0.88,TW,TH*0.12);
+  // === Panneau avant (nez) si train pas encore plein écran ===
+  if(TX > TX_FINAL+2){
+    // Nez arrondi turquoise
+    ctx.fillStyle=C_TEAL;
+    ctx.beginPath();
+    ctx.moveTo(tx+30,ty);
+    ctx.lineTo(tx,ty+TH*0.15);
+    ctx.lineTo(tx,ty+TH*0.85);
+    ctx.lineTo(tx+30,ty+TH);
+    ctx.closePath(); ctx.fill();
+    // Vitre conducteur
+    ctx.fillStyle='#1a2830';
+    ctx.beginPath(); ctx.roundRect(tx+4,ty+TH*0.14,26,TH*0.22,3); ctx.fill();
+    // Phares ronds
+    ctx.fillStyle='#222';
+    [TH*0.55, TH*0.65, TH*0.73].forEach(fy=>{
+      ctx.beginPath(); ctx.arc(tx+12,ty+fy,5,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(180,220,255,0.3)'; ctx.beginPath(); ctx.arc(tx+12,ty+fy,3,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#222';
+    });
+    // Numéro de rame
+    ctx.fillStyle='#111'; ctx.beginPath(); ctx.roundRect(tx+2,ty+TH*0.82,28,14,2); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.font='bold 9px monospace'; ctx.textAlign='center';
+    ctx.fillText('127',tx+16,ty+TH*0.82+10);
+  }
 
-  // Left edge panel (end of train car visible at screen left when fully arrived)
+  // === Panneau gauche (fin de rame) ===
   if(TX<=TX_FINAL+2){
-    ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,18,TH);
-    ctx.fillStyle=C_BLUE; ctx.fillRect(tx,ty+TH*0.14,18,TH*0.24);
-    ctx.fillStyle='#8a9298'; ctx.fillRect(tx,ty+TH*0.88,18,TH*0.12);
+    ctx.fillStyle=C_TEAL; ctx.fillRect(tx,ty,22,TH);
+    ctx.fillStyle=C_ROOF; ctx.fillRect(tx,ty,22,TH*0.13);
+    ctx.fillStyle='#bbbebb'; ctx.fillRect(tx,ty+TH*0.90,22,TH*0.10);
   }
 
-  // Windows row — more windows for full-width train
-  ctx.fillStyle=C_DARK;
-  const wY=ty+7, wH=TH*0.13;
-  for(let i=0;i<14;i++){
-    const wx=tx+14+i*(TW/14.1);
-    ctx.beginPath();ctx.roundRect(wx,wY,Math.min(52,TW/14.1-8),wH,3);ctx.fill();
-    ctx.fillStyle='rgba(140,190,255,0.10)';ctx.fillRect(wx+3,wY+3,12,wH-6);
-    ctx.fillStyle=C_DARK;
+  // === Fenêtres (grandes, rectangulaires, légèrement teintées) ===
+  const wY=ty+TH*0.14, wH=TH*0.24;
+  const nWin=Math.floor(TW/100);
+  const wStep=TW/nWin;
+  for(let i=0;i<nWin;i++){
+    const wx=tx+wStep*i+wStep*0.18;
+    const ww=wStep*0.62;
+    ctx.fillStyle='#2a3a40';
+    ctx.beginPath(); ctx.roundRect(wx,wY,ww,wH,4); ctx.fill();
+    // Reflet vitre
+    ctx.fillStyle='rgba(160,220,220,0.12)';
+    ctx.fillRect(wx+3,wY+4,ww*0.35,wH-8);
   }
 
-  // Doors
+  // === Montants verticaux noirs entre les portes ===
+  // Piliers structurels noirs caractéristiques de la MF88
+  const pillarW=8;
+  DREL.forEach(r=>{
+    const px2=tx+r*TW;
+    ctx.fillStyle='#111';
+    ctx.fillRect(px2-DW/2-pillarW, ty+TH*0.13, pillarW, TH*0.87);
+    ctx.fillRect(px2+DW/2,          ty+TH*0.13, pillarW, TH*0.87);
+  });
+
+  // === Portes ===
   DREL.forEach((_,i)=>{
     const dx=doorCX(i), dy=doorY(), dh=DH;
     if(doorsOpen){
-      ctx.fillStyle='#1a2838';
-      ctx.fillRect(dx-DW/2-20,dy,18,dh);ctx.fillRect(dx+DW/2+2,dy,18,dh);
+      // Panneaux coulissants sombres
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(dx-DW/2-22,dy,20,dh); ctx.fillRect(dx+DW/2+2,dy,20,dh);
+      // Intérieur éclairé (lumière chaude wagon)
       const ig=ctx.createLinearGradient(0,dy,0,dy+dh);
-      ig.addColorStop(0,'#fff8e0');ig.addColorStop(1,'#f0cc50');
-      ctx.fillStyle=ig;ctx.fillRect(dx-DW/2,dy,DW,dh);
-      ctx.fillStyle='#282828';ctx.fillRect(dx-DW/2-2,dy+dh,DW+4,8);
-      ctx.strokeStyle='rgba(74,158,255,0.18)';ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(dx,dy+dh/2,95,0,Math.PI*2);ctx.stroke();
+      ig.addColorStop(0,'#fff5e0'); ig.addColorStop(1,'#e8d060');
+      ctx.fillStyle=ig; ctx.fillRect(dx-DW/2,dy,DW,dh);
+      // Seuil
+      ctx.fillStyle='#1a1a1a'; ctx.fillRect(dx-DW/2-2,dy+dh,DW+4,8);
+      // Halo proximité
+      ctx.strokeStyle='rgba(0,180,160,0.2)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(dx,dy+dh/2,95,0,Math.PI*2); ctx.stroke();
     } else {
-      ctx.fillStyle='#2a3c50';ctx.strokeStyle='#3a5060';ctx.lineWidth=1;
-      ctx.beginPath();ctx.roundRect(dx-DW/2,dy,DW,dh,2);ctx.fill();ctx.stroke();
-      ctx.strokeStyle='#4a6070';ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.moveTo(dx,dy+5);ctx.lineTo(dx,dy+dh-5);ctx.stroke();
-      ctx.fillStyle='#6a8090';
-      ctx.beginPath();ctx.arc(dx-7,dy+dh/2,3,0,Math.PI*2);ctx.fill();
-      ctx.beginPath();ctx.arc(dx+7,dy+dh/2,3,0,Math.PI*2);ctx.fill();
+      // Porte fermée — même couleur que carrosserie avec joint noir
+      ctx.fillStyle=C_BODY;
+      ctx.fillRect(dx-DW/2,dy,DW,dh);
+      // Joint de porte noir
+      ctx.strokeStyle='#222'; ctx.lineWidth=1.5;
+      ctx.strokeRect(dx-DW/2,dy,DW,dh);
+      // Ligne centrale
+      ctx.beginPath(); ctx.moveTo(dx,dy+6); ctx.lineTo(dx,dy+dh-6); ctx.stroke();
+      // Poignée
+      ctx.fillStyle='#888';
+      ctx.beginPath(); ctx.roundRect(dx-12,dy+dh/2-3,10,6,2); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(dx+2,dy+dh/2-3,10,6,2); ctx.fill();
     }
   });
 
-  // Label
-  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.beginPath();ctx.roundRect(tx+10,ty+TH-21,118,17,3);ctx.fill();
-  ctx.fillStyle='#aabbcc';ctx.font='bold 10px monospace';ctx.textAlign='left';
-  ctx.fillText('RATP · Ligne 8',tx+14,ty+TH-9);
+  // === Logo Île-de-France Mobilités (cercle avec flèche stylisée) ===
+  [0.25, 0.65].forEach(r=>{
+    const lx=tx+r*TW, ly=ty+TH*0.70;
+    ctx.strokeStyle='#00A99D'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(lx,ly,11,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='#00A99D'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(lx-5,ly+4); ctx.quadraticCurveTo(lx,ly-8,lx+5,ly+4); ctx.stroke();
+  });
+
+  // === Numéro de ligne sur le toit ===
+  ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.roundRect(tx+TW/2-20,ty+4,40,16,4); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='bold 11px monospace'; ctx.textAlign='center';
+  ctx.fillText('8',tx+TW/2,ty+16);
 }
 
 // ── DRAW PLAYER ───────────────────────────────────────────────────────────────
@@ -393,13 +503,18 @@ function gameLoop(){
   if(!inZ&&inZoneBefore&&!doorsOpen) setStatus('Rejoignez une zone d\'attente podotactile...');
   inZoneBefore=inZ;
 
-  // Vibration
+  // Vibration — signal démarre uniquement depuis la zone podotactile
   if(doorsOpen&&state==='playing'){
     const d=nearDoorDist();
-    if(d<55){setVib(3);setStatus('📳📳📳 Porte à portée — entrez !');}
-    else if(d<110){setVib(2);setStatus('📳📳 Porte proche...');}
-    else if(d<180){setVib(1);setStatus('📳 Signal faible — porte détectée...');}
-    else setVib(0);
+    const zones=waitZones();
+    const inColumn=zones.some(z=>player.x>z.x && player.x<z.x+z.w && player.y<=z.y+z.h);
+    if(inColumn){
+      if(d<55){       setVib(3); setStatus('📳📳📳 Porte à portée — entrez !'); }
+      else if(d<110){ setVib(2); setStatus('📳📳 Porte proche...'); }
+      else {          setVib(1); setStatus('📳 Signal faible — porte détectée...'); }
+    } else {
+      setVib(0);
+    }
   } else if(!doorsOpen) setVib(0);
 
   // Board
