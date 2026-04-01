@@ -197,6 +197,7 @@ const C_BODY='#F0F2F0';   // blanc cassé carrosserie
 
 // 3 doors evenly spaced along the full-width train
 const DREL=[0.18,0.50,0.80];
+const DREL_ZONES=[0.18,0.80]; // only left and right zones
 const DW=Math.max(70,W*0.075);
 const DH=TH*0.48;
 
@@ -209,15 +210,15 @@ const ZONE_GAP=H*0.16;  // distance from PT (platform edge) to top of zone
 const ZW_PAD=24;         // extra px each side beyond door width
 const ZH=H*0.10;
 function waitZones(){
-  return DREL.map(r=>({
-    x: TX+r*TW - DW/2 - ZW_PAD,
+  return DREL_ZONES.map(r=>({
+    x: TX_FINAL + r*TW - DW/2 - ZW_PAD,
     y: PT + ZONE_GAP,
     w: DW + ZW_PAD*2,
     h: ZH
   }));
 }
 
-function inAnyZone(){ return trainArrived && waitZones().some(z=>player.x>z.x&&player.x<z.x+z.w&&player.y>z.y&&player.y<z.y+z.h); }
+function inAnyZone(){ return waitZones().some(z=>player.x>z.x&&player.x<z.x+z.w&&player.y>z.y&&player.y<z.y+z.h); }
 function nearDoorDist(){
   if(!trainArrived||!doorsOpen) return 9999;
   return Math.min(...DREL.map((_,i)=>Math.hypot(player.x-doorCX(i),player.y-(TY+TH))));
@@ -304,7 +305,6 @@ function drawPlatform(){
 
 // ── DRAW GUIDE STRIPS + WAIT ZONES ───────────────────────────────────────────
 function drawZones(){
-  if(!trainArrived) return;
   waitZones().forEach(z=>{
     const cx=z.x+z.w/2;
     // Wait zone — podotactile bumps only, no guide strip
